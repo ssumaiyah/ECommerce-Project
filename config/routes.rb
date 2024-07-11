@@ -1,14 +1,18 @@
 Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+  
+  get 'about', to: 'pages#about'
+get 'contact', to: 'pages#contact'
 
-  get 'pages/home'
+ 
   get 'pages/about'
 
   resources :users
   resources :artisans
  root 'products#index'
-resources :products, only: [:index, :show]
+ resources :pages, only: [:show]
+ resources :products, only: [:index, :show]
 
   resources :orders
   resources :order_items
