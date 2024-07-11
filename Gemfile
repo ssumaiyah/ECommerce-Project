@@ -10,6 +10,12 @@ gem "faker"
 gem 'bcrypt', '~> 3.1.7'
 
 
+gem 'activeadmin'
+gem 'devise'
+gem 'sassc'
+
+
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 

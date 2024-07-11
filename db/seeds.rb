@@ -101,3 +101,4 @@ end
     updated_at: Faker::Time.between(from: 1.year.ago, to: Date.today)
   )
 end
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
