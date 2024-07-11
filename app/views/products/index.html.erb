@@ -1,2 +1,12 @@
-<h1>Products#index</h1>
-<p>Find me in app/views/products/index.html.erb</p>
+<!-- Example pagination in your index view -->
+<div class="pagination">
+  <%= paginate @products %>
+</div>
+
+<!-- List of products -->
+<ul>
+  <% @products.each do |product| %>
+    <li><%= product.name %></li>
+    <!-- Add other product details as needed -->
+  <% end %>
+</ul>

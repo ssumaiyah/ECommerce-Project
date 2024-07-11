@@ -4,10 +4,12 @@ Rails.application.routes.draw do
 
   get 'pages/home'
   get 'pages/about'
-  
+
   resources :users
   resources :artisans
-  resources :products
+ root 'products#index'
+resources :products, only: [:index, :show]
+
   resources :orders
   resources :order_items
   resources :categories
@@ -16,5 +18,5 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
-  root "pages#home"
+  
 end

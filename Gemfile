@@ -14,6 +14,8 @@ gem 'activeadmin'
 gem 'devise'
 gem 'sassc'
 
+gem 'kaminari'
+
 
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
