@@ -1,4 +1,4 @@
-<!-- Example pagination in your index view -->
+
 <div class="pagination">
   <%= paginate @products %>
 </div>
@@ -6,7 +6,9 @@
 <!-- List of products -->
 <ul>
   <% @products.each do |product| %>
-    <li><%= product.name %></li>
-    <!-- Add other product details as needed -->
+    <li>
+      <%= link_to product.name, product_path(product) %>
+      
+    </li>
   <% end %>
 </ul>

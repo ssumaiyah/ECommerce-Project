@@ -1,3 +1,7 @@
 <h1><%= @product.name %></h1>
-<p><%= @product.description %></p>
-<!-- Display other product details -->
+<p><strong>Description:</strong></p><p><%= @product.description %></p>
+<p><strong>Price:</strong></p><p><%= @product.price %></p>
+<p><strong>Quantity_available:</strong></p><p><%= @product.quantity_available %></p>
+<p><strong>Artisan:</strong></p>
+<p><%= @product.artisan.name %></p>
+

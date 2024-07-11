@@ -47,7 +47,7 @@ end
 200.times do
   product = Product.create!(
     name: Faker::Commerce.product_name,
-    description: Faker::Lorem.paragraph,
+    description: Faker::Lorem.paragraph(sentence_count: 3, supplemental: true, random_sentences_to_add: 4),   
     price: Faker::Commerce.price(range: 10.0..100.0),
     quantity_available: Faker::Number.between(from: 1, to: 100),
     artisan_id: Artisan.pluck(:id).sample,

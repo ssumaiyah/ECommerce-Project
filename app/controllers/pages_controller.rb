@@ -1,11 +1,9 @@
 class PagesController < ApplicationController
-  
+  def show
+    @page = Page.find(params[:id])
+  end
 
   
-
-    def show
-      @page = Page.find(params[:id])
-    end
   
     def about
       @page = Page.find_by(title: 'About')

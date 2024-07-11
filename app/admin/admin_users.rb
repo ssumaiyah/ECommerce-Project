@@ -1,6 +1,7 @@
 ActiveAdmin.register AdminUser do
-  permit_params :email, :password, :password_confirmation
-  permit_params :name, :description, :price, :category_id, :image
+  permit_params :email, :password, :password_confirmation, category_ids: []
+  permit_params :name, :description, :price, :image
+  permit_params :artisan_id, :name, :description, :price, :quantity_available
 
   filter :image
   index do
@@ -10,6 +11,7 @@ ActiveAdmin.register AdminUser do
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
+    
     actions
   end
 
@@ -23,6 +25,7 @@ ActiveAdmin.register AdminUser do
       f.input :email
       f.input :password
       f.input :password_confirmation
+      f.input :categories, as: :check_boxes
     end
     f.actions
   end
