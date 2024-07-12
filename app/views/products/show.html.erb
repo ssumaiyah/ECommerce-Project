@@ -4,4 +4,10 @@
 <p><strong>Quantity_available:</strong></p><p><%= @product.quantity_available %></p>
 <p><strong>Artisan:</strong></p>
 <p><%= @product.artisan.name %></p>
+<p><strong>Categories:</strong></p>
+<ul>
+  <% @product.categories.each do |category| %>
+    <li><%= category.name %></li>
+  <% end %>
+</ul>
 

@@ -1,14 +1,14 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
 require 'faker'
 
+# Clear existing data
+Review.destroy_all
+OrderItem.destroy_all
+Order.destroy_all
+Artisan.destroy_all
+User.destroy_all
+ProductCategory.destroy_all
+Product.destroy_all
+Category.destroy_all
 
 # Known password for all users
 user_password = 'password123'
@@ -34,20 +34,26 @@ end
   )
 end
 
-# Create categories
-50.times do
-  Category.create!(
-    name: Faker::Commerce.department,
-    created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
-    updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
+# Create categories in batches
+categories_count = 50
+batch_size = 10
+
+(0..categories_count).step(batch_size) do |offset|
+  Category.insert_all(
+    (offset...offset + batch_size).map do
+      {
+        name: Faker::Commerce.department(max: 1),
+        created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
+        updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
+      }
+    end
   )
 end
-
 # Create products and associate them with artisans and categories
 200.times do
   product = Product.create!(
     name: Faker::Commerce.product_name,
-    description: Faker::Lorem.paragraph(sentence_count: 3, supplemental: true, random_sentences_to_add: 4),   
+    description: Faker::Lorem.paragraph(sentence_count: 3, supplemental: true, random_sentences_to_add: 4),
     price: Faker::Commerce.price(range: 10.0..100.0),
     quantity_available: Faker::Number.between(from: 1, to: 100),
     artisan_id: Artisan.pluck(:id).sample,
@@ -56,7 +62,7 @@ end
   )
 
   # Associate each product with 1-3 random categories
-  Category.order("RANDOM()").limit(rand(1..3)).each do |category|
+  Category.order(Arel.sql('RANDOM()')).limit(rand(1..3)).each do |category|
     ProductCategory.create!(
       product: product,
       category: category,
@@ -82,7 +88,7 @@ end
     OrderItem.create!(
       order: order,
       product_id: Product.pluck(:id).sample,
-      quantity: Faker::Number.between(from: 1, to: 5),
+      quantity: Faker::Number.between(from: 1, to: 20),
       price_at_purchase: Faker::Commerce.price(range: 10.0..100.0),
       created_at: Faker::Time.between(from: 1.year.ago, to: Date.today),
       updated_at: Faker::Time.between(from: 1.year.ago, to: Date.today)
@@ -101,4 +107,5 @@ end
     updated_at: Faker::Time.between(from: 1.year.ago, to: Date.today)
   )
 end
+
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
