@@ -2,6 +2,9 @@ require_relative "boot"
 
 require "rails/all"
 
+# config/application.rb
+require "image_processing/mini_magick"
+
 require 'kaminari'
 
 

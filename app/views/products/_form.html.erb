@@ -1,3 +1,4 @@
+<!-- app/views/products/_form.html.erb -->
 <%= form_for @product, html: { multipart: true } do |f| %>
   <div class="field">
     <%= f.label :name %>
@@ -10,19 +11,8 @@
   </div>
 
   <div class="field">
-    <%= f.label :price %>
-    <%= f.number_field :price %>
-  </div>
-
-  <div class="field">
-    <%= f.label :quantity_available %>
-    <%= f.number_field :quantity_available %>
-  </div>
-
-  <div class="field">
     <%= f.label :image %>
     <%= f.file_field :image %>
-    <%= image_tag @product.image if @product.image.attached? %>
   </div>
 
   <div class="actions">

@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   resources :artisans
   root 'products#index'
   resources :pages, only: [:show]
-  resources :products, only: [:index, :show] do
+  resources :products, only: [:index, :show, :edit, :update] do
     collection do
       get 'search', to: 'products#search', as: 'search'
     end

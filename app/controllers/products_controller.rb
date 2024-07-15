@@ -14,19 +14,32 @@ class ProductsController < ApplicationController
       @products = @products.recently_updated(3.days.ago)
     end
 
-    @products = Product.page(params[:page]).per(10)
+    @products = @products.page(params[:page]).per(10)
   end 
 
   def show
     @product = Product.find(params[:id])
   end
 
+  def edit
+    @product = Product.find(params[:id])
+  end
+  
   def create
     @product = Product.new(product_params)
     if @product.save
       redirect_to @product, notice: 'Product was successfully created.'
     else
       render :new
+    end
+  end
+  
+  def update
+    @product = Product.find(params[:id])
+    if @product.update(product_params)
+      redirect_to @product, notice: 'Product was successfully updated.'
+    else
+      render :edit
     end
   end
 
@@ -54,9 +67,10 @@ class ProductsController < ApplicationController
     render 'search_results'
   end
   
+  
   private
 
   def product_params
-    params.require(:product).permit(:artisan_id, :name, :description, :price, :quantity_available)
+    params.require(:product).permit(:artisan_id, :name, :description, :price, :quantity_available, :image)
   end
 end

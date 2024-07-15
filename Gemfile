@@ -9,6 +9,8 @@ gem "faker"
 
 gem 'bcrypt', '~> 3.1.7'
 
+gem 'image_processing', '~> 1.12'  # for image processing
+gem 'mini_magick', '~> 4.11'        # dependency for image_processing with MiniMagick
 
 gem 'activeadmin'
 gem 'devise'
