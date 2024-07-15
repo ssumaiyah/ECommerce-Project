@@ -3,16 +3,18 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   
   get 'about', to: 'pages#about'
-get 'contact', to: 'pages#contact'
-
- 
+  get 'contact', to: 'pages#contact'
   get 'pages/about'
 
   resources :users
   resources :artisans
- root 'products#index'
- resources :pages, only: [:show]
- resources :products, only: [:index, :show]
+  root 'products#index'
+  resources :pages, only: [:show]
+  resources :products, only: [:index, :show] do
+    collection do
+      get 'search', to: 'products#search', as: 'search'
+    end
+  end
 
   resources :orders
   resources :order_items
@@ -21,6 +23,4 @@ get 'contact', to: 'pages#contact'
   resources :product_categories
 
   get "up" => "rails/health#show", as: :rails_health_check
-
-  
 end

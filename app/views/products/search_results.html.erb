@@ -1,0 +1,26 @@
+<!-- app/views/products/search_results.html.erb -->
+<h1>Search Results</h1>
+
+<% if @products.any? %>
+  <ul>
+    <% @products.each do |product| %>
+      <li>
+        <%= link_to product.name, product %>
+        <%= image_tag product.image if product.image.attached? %>
+        <p><%= product.description %></p>
+        
+        <p>Categories:
+          <ul>
+            <% product.categories.each do |category| %>
+              <li><%= link_to category.name, category_path(category) %></li>
+            <% end %>
+          </ul>
+        </p>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= paginate @products %>
+<% else %>
+  <p>No products found.</p>
+<% end %>
