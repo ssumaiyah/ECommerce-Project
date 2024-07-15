@@ -1,2 +1,23 @@
-<h1>Artisans#show</h1>
-<p>Find me in app/views/artisans/show.html.erb</p>
+<h1><%= @artisan.name %></h1>
+
+<p><strong>Bio:</strong></p>
+<p><%= @artisan.bio %></p>
+
+<p><strong>Contact Email:</strong></p>
+<p><%= @artisan.contact_email %></p>
+
+
+<h2>Products by <%= @artisan.name %></h2>
+
+<ul>
+  <% @artisan.products.each do |product| %>
+    <li>
+      <%= link_to product.name, product_path(product) %>
+      <p><strong>Description:</strong> <%= product.description %></p>
+      
+    </li>
+  <% end %>
+</ul>
+
+
+<%= link_to 'Back', artisans_path %>

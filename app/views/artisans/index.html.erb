@@ -1,2 +1,11 @@
-<h1>Artisans#index</h1>
-<p>Find me in app/views/artisans/index.html.erb</p>
+<h1>Artisans</h1>
+
+<ul>
+  <% @artisans.each do |artisan| %>
+    <li>
+      <%= link_to artisan.name, artisan_path(artisan) %>
+    </li>
+  <% end %>
+</ul>
+
+<%= paginate @artisans %>

@@ -5,7 +5,7 @@ ActiveAdmin.register Artisan do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :name, :bio, :contact_email
+   permit_params :name, :bio, :contact_email
   #
   # or
   #

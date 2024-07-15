@@ -3,6 +3,7 @@ ActiveAdmin.register AdminUser do
   permit_params :name, :description, :price, :image
   permit_params :artisan_id, :name, :description, :price, :quantity_available
 
+  
   filter :image
   index do
     selectable_column
