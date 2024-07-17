@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_17_173237) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_17_193001) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -90,6 +90,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_173237) do
     t.index ["product_id"], name: "index_order_items_on_product_id"
   end
 
+  create_table "order_tax_rates", force: :cascade do |t|
+    t.integer "order_id", null: false
+    t.integer "tax_rate_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_tax_rates_on_order_id"
+    t.index ["tax_rate_id"], name: "index_order_tax_rates_on_tax_rate_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.integer "user_id", null: false
     t.decimal "total_amount"
@@ -97,6 +106,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_173237) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "subtotal"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -127,6 +137,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_173237) do
     t.index ["artisan_id"], name: "index_products_on_artisan_id"
   end
 
+  create_table "provinces", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.integer "product_id", null: false
     t.integer "user_id", null: false
@@ -136,6 +152,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_173237) do
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_reviews_on_product_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
+  create_table "tax_rates", force: :cascade do |t|
+    t.string "name"
+    t.decimal "rate"
+    t.string "tax_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tax_rates_provinces", force: :cascade do |t|
+    t.integer "tax_rate_id", null: false
+    t.integer "province_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["province_id"], name: "index_tax_rates_provinces_on_province_id"
+    t.index ["tax_rate_id"], name: "index_tax_rates_provinces_on_tax_rate_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -148,6 +181,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_173237) do
     t.datetime "remember_created_at"
     t.integer "province_id"
     t.string "password_digest"
+    t.string "name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -156,10 +190,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_173237) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
+  add_foreign_key "order_tax_rates", "orders"
+  add_foreign_key "order_tax_rates", "tax_rates"
   add_foreign_key "orders", "users"
   add_foreign_key "product_categories", "categories"
   add_foreign_key "product_categories", "products"
   add_foreign_key "products", "artisans"
   add_foreign_key "reviews", "products"
   add_foreign_key "reviews", "users"
+  add_foreign_key "tax_rates_provinces", "provinces"
+  add_foreign_key "tax_rates_provinces", "tax_rates"
 end

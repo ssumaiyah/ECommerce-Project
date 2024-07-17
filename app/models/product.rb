@@ -1,4 +1,5 @@
 class Product < ApplicationRecord
+
   belongs_to :artisan
   has_many :order_items
   has_many :product_categories
@@ -11,8 +12,9 @@ class Product < ApplicationRecord
   end
 
   validates :name, presence: true
+  validates :description, presence: true
   validates :price, numericality: { greater_than_or_equal_to: 0 }
-  validates :quantity_available, numericality: { greater_than_or_equal_to: 0 }
+  validates :quantity_available, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   def self.ransackable_associations(auth_object = nil)
     ["artisan","order_items","product_categories","categories","reviews"]

@@ -1,7 +1,9 @@
 class Order < ApplicationRecord
  
+
   belongs_to :user
   has_many :order_items
+  has_many :tax_rates, through: :order_tax_rates
   has_many :products, through: :order_items
   def self.ransackable_attributes(auth_object = nil)
     ["id", "user_id", "total_amount", "order_date","status", "created_at","updated_at"]
@@ -36,8 +38,11 @@ end
     end
     taxes
   end
+ 
 
+  validates :subtotal, numericality: { greater_than_or_equal_to: 0 }
   validates :total_amount, numericality: { greater_than_or_equal_to: 0 }
+
   validates :order_date, presence: true
-  validates :status, inclusion: { in: ['Pending', 'Processing', 'Shipped', 'Delivered'] }
+  validates :status, inclusion: { in: ['pending', 'paid', 'shipped', 'completed', 'cancelled'] }
 end

@@ -1,4 +1,5 @@
 require 'faker'
+require 'bcrypt'
 
 # Clear existing data
 Review.destroy_all
@@ -9,19 +10,57 @@ User.destroy_all
 ProductCategory.destroy_all
 Product.destroy_all
 Category.destroy_all
+OrderTaxRate.delete_all
+TaxRatesProvince.delete_all
+TaxRate.delete_all
+User.delete_all
+Province.delete_all
 
-# Known password for all users
-user_password = 'password123'
 
-# Create regular users
+
+# List of provinces and their tax rates
+provinces_with_tax_rates = [
+  { name: 'Alberta', gst: 5, pst: 0, hst: 0 },
+  { name: 'British Columbia', gst: 5, pst: 7, hst: 0 },
+  { name: 'Manitoba', gst: 5, pst: 7, hst: 0 },
+  { name: 'New Brunswick', gst: 0, pst: 0, hst: 15 },
+  { name: 'Newfoundland and Labrador', gst: 0, pst: 0, hst: 15 },
+  { name: 'Northwest Territories', gst: 5, pst: 0, hst: 0 },
+  { name: 'Nova Scotia', gst: 0, pst: 0, hst: 15 },
+  { name: 'Nunavut', gst: 5, pst: 0, hst: 0 },
+  { name: 'Ontario', gst: 0, pst: 0, hst: 13 },
+  { name: 'Prince Edward Island', gst: 0, pst: 0, hst: 15 },
+  { name: 'Quebec', gst: 5, pst: 9.975, hst: 0 },
+  { name: 'Saskatchewan', gst: 5, pst: 6, hst: 0 },
+  { name: 'Yukon', gst: 5, pst: 0, hst: 0 }
+]
+
+# Seed Provinces table
+provinces_with_tax_rates.each do |province|
+  Province.create!(name: province[:name])
+end
+
+# Seed TaxRates table
+provinces_with_tax_rates.each do |province|
+  TaxRate.create!(name: "#{province[:name]} GST", rate: province[:gst], tax_type: 'GST')
+  TaxRate.create!(name: "#{province[:name]} PST", rate: province[:pst], tax_type: 'PST') if province[:pst] > 0
+  TaxRate.create!(name: "#{province[:name]} HST", rate: province[:hst], tax_type: 'HST') if province[:hst] > 0
+end
+
+# Seed users table
 50.times do
+  password = 'password123'
   User.create!(
+    name: Faker::Name.name,
     email: Faker::Internet.email,
-    password_digest: BCrypt::Password.create(user_password),
+    password: password,  # This line is crucial for bypassing Devise validations
+    password_confirmation: password,  # Optional, but recommended if you have a confirmation field
     created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
-    updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
+    updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
+    province_id: Province.pluck(:id).sample
   )
 end
+
 
 # Create artisans
 80.times do
@@ -72,28 +111,45 @@ end
   end
 end
 
-# Create orders and order items
-20.times do
+# Seed Orders table
+100.times do
   order = Order.create!(
-    user_id: User.pluck(:id).sample,
-    total_amount: Faker::Commerce.price(range: 50.0..500.0),
+    user: User.order('RANDOM()').first,
+    subtotal: Faker::Commerce.price(range: 50.0..100.0),
+    total_amount: Faker::Commerce.price(range: 50.0..100.0),
     order_date: Faker::Date.between(from: 1.year.ago, to: Date.today),
-    status: ['Pending', 'Processing', 'Shipped', 'Delivered'].sample,
+    status: ['pending', 'paid', 'shipped', 'completed', 'cancelled'].sample,
     created_at: Faker::Time.between(from: 1.year.ago, to: Date.today),
     updated_at: Faker::Time.between(from: 1.year.ago, to: Date.today)
   )
 
-  # Each order can have 1-5 order items
   rand(1..5).times do
     OrderItem.create!(
       order: order,
-      product_id: Product.pluck(:id).sample,
-      quantity: Faker::Number.between(from: 1, to: 20),
+      product: Product.order('RANDOM()').first,
+      quantity: rand(1..10),
       price_at_purchase: Faker::Commerce.price(range: 10.0..100.0),
       created_at: Faker::Time.between(from: 1.year.ago, to: Date.today),
       updated_at: Faker::Time.between(from: 1.year.ago, to: Date.today)
     )
   end
+end
+
+
+# Seed OrderTaxRates table
+10.times do
+  OrderTaxRate.create!(
+    order_id: Order.pluck(:id).sample,  # Assign a random order_id
+    tax_rate_id: TaxRate.pluck(:id).sample  # Assign a random tax_rate_id
+  )
+end
+
+# Seed TaxRatesProvinces table
+10.times do
+  TaxRatesProvince.create!(
+    tax_rate_id: TaxRate.pluck(:id).sample,    # Assign a random tax_rate_id
+    province_id: Province.pluck(:id).sample     # Assign a random province_id
+  )
 end
 
 # Create reviews

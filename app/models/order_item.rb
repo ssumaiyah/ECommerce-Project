@@ -9,11 +9,10 @@ class OrderItem < ApplicationRecord
     ["order","product"]
   end
 
-  validates :quantity, numericality: { greater_than: 0 }
+  validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   validates :price_at_purchase, numericality: { greater_than_or_equal_to: 0 }
 
   def total_price
     quantity * price_at_purchase
   end
-  
 end
