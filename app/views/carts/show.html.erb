@@ -1,0 +1,13 @@
+<!-- app/views/carts/show.html.erb -->
+<h1>Shopping Cart</h1>
+
+<ul>
+  <% @products_in_cart.each do |item| %>
+    <li>
+      <%= item[:quantity] %> x <%= item[:product].present? ? item[:product].name : 'Product not found' %>
+      <!-- Add other details like price, total, etc. as needed -->
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to 'Back to Products', products_path %>

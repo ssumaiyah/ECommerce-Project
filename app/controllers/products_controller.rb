@@ -67,6 +67,26 @@ class ProductsController < ApplicationController
     render 'search_results'
   end
   
+  def add_item_to_cart
+    product = Product.find(params[:id])
+    quantity = params[:quantity].to_i
+
+    # Initialize cart in session if it doesn't exist
+    session[:cart] ||= []
+
+    # Check if the product is already in the cart
+    cart_item = session[:cart].find { |item| item[:product_id] == product.id }
+
+    if cart_item
+      # Update quantity if product already exists in cart
+      cart_item[:quantity] += quantity
+    else
+      # Add new product to cart
+      session[:cart] << { product_id: product.id, quantity: quantity }
+    end
+
+    redirect_to product_path(product), notice: 'Product added to cart.'
+  end
   
   private
 

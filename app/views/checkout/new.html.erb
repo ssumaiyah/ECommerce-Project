@@ -1,0 +1,32 @@
+<!-- app/views/checkout/new.html.erb -->
+<h1>Checkout</h1>
+
+<%= form_with model: @order, url: checkout_path, local: true do |form| %>
+  <div>
+    <h2>Order Summary</h2>
+    <ul>
+      <% @order.order_items.each do |item| %>
+        <li>
+          <%= item.product.name %> - <%= item.quantity %> x <%= number_to_currency(item.price_at_purchase) %> = <%= number_to_currency(item.total_price) %>
+        </li>
+      <% end %>
+    </ul>
+    <p>Subtotal: <%= number_to_currency(@order.subtotal) %></p>
+    <p>Taxes: <%= number_to_currency(@order.calculate_taxes) %></p>
+    <p>Total: <%= number_to_currency(@order.total_amount) %></p>
+  </div>
+
+  <div>
+    <h2>Billing Information</h2>
+    <% if current_user.province.nil? %>
+      <p>Please provide your address details:</p>
+      <%= form.collection_select :province_id, Province.all, :id, :name, prompt: 'Select your province' %>
+    <% else %>
+      <p>Province: <%= current_user.province.name %></p>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.submit "Complete Order" %>
+  </div>
+<% end %>

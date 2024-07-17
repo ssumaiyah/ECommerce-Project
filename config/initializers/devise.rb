@@ -14,12 +14,13 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = 'e12cc8784bb3471fe09d1f6b16e0de9c441a769656fd207c39a250a545a31e176a6907c9c94c4cb5bfdb538b4decd32ba1a6dbc206da3a1b25258c2afa21fcb3'
+  # config.secret_key = 'bd1b007ed1d64664f94fc680f4e538340184e0fea21355b8903e60316fb2f38165c421fe43119a1fbc91b7965bb705b8b2eb6732e9290d5fa76eaf5b389f8035'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
   # config.parent_controller = 'DeviseController'
 
+  
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
@@ -126,7 +127,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 12
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = '105694fd567017d72ebae3d250f7ff2f87ff6da971a93cd85c3316c90843dd3faaac0687fe6c021232b1c0b6b8dc5c9e9457fe444ccf07a0d0acdc987f6ac107'
+  # config.pepper = '5afa2ca4e73728f5474c152d6b36546556bb0470e9e09bacafe5d5ac86ced1032a149ab9bcfa611876fe27af1ff6b2c890c10e0f9ac90def420dd55a15d06868'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false
@@ -295,7 +296,7 @@ Devise.setup do |config|
   # When using OmniAuth, Devise cannot automatically set OmniAuth path,
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
-
+  config.navigational_formats = ['*/*', :html, :turbo_stream]
   # ==> Hotwire/Turbo configuration
   # When using Devise with Hotwire/Turbo, the http status for error responses
   # and some redirects must match the following. The default in Devise for existing
