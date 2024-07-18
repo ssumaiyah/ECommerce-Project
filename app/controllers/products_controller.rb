@@ -1,21 +1,35 @@
 class ProductsController < ApplicationController
+  before_action :set_product, only: [:show, :add_item_cart]
+
   def index
-    @products = Product.all
+    @products = Product.page(params[:page]).per(10)
+  end
+  
+  
+  def show
+    # Your existing show action code
+  end
 
-    if params[:on_sale]
-      @products = @products.on_sale
-    end
+  def add_item_cart
+    quantity = params[:quantity].to_i
+    current_order.add_product(@product.id, quantity)
+    redirect_to product_path(@product), notice: 'Product added to cart successfully!'
+  end
 
-    if params[:new_products]
-      @products = @products.newly_added(3.days.ago)
-    end
+  private
 
-    if params[:recently_updated]
-      @products = @products.recently_updated(3.days.ago)
-    end
+  def set_product
+    @product = Product.find(params[:id])
+  end
 
-    @products = @products.page(params[:page]).per(10)
-  end 
+  def current_order
+    # Find or create the current order for the user with 'in_progress' status
+    @current_order ||= current_user.orders.in_progress.last || current_user.orders.create(status: 'in_progress', order_date: Date.today)
+  end
+
+  
+   
+ 
 
   def show
     @product = Product.find(params[:id])
@@ -66,28 +80,12 @@ class ProductsController < ApplicationController
     # Render the search results view
     render 'search_results'
   end
-  
-  def add_item_to_cart
-    product = Product.find(params[:id])
-    quantity = params[:quantity].to_i
-
-    # Initialize cart in session if it doesn't exist
-    session[:cart] ||= []
-
-    # Check if the product is already in the cart
-    cart_item = session[:cart].find { |item| item[:product_id] == product.id }
-
-    if cart_item
-      # Update quantity if product already exists in cart
-      cart_item[:quantity] += quantity
-    else
-      # Add new product to cart
-      session[:cart] << { product_id: product.id, quantity: quantity }
-    end
-
-    redirect_to product_path(product), notice: 'Product added to cart.'
+  def show
+    # Your existing show action code
   end
-  
+
+ 
+
   private
 
   def product_params

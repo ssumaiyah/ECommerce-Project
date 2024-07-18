@@ -21,12 +21,17 @@
   <p>No image added</p>
 <% end %>
 
-<%= form_with url: add_item_cart_product_path(@product), method: :post do |form| %>
-  <%= form.number_field :quantity, value: 1, min: 1 %>
-  <%= form.submit "Add to Cart" %>
+<%= form_with url: add_item_cart_product_path(@product), method: :post do %>
+  <div class="field">
+    <%= label_tag :quantity %>
+    <%= number_field_tag :quantity, 1, min: 1 %>
+  </div>
+  <div class="actions">
+    <%= submit_tag 'Add to Cart' %>
+  </div>
 <% end %>
 
-<%= link_to 'View Cart', cart_path, class: 'btn btn-primary' %>
+<%= link_to 'View Cart', order_path, class: 'btn btn-primary' %>
 
 <%= link_to 'Edit', edit_product_path(@product) %>
 <%= link_to 'Back', products_path %>

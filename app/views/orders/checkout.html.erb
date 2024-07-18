@@ -1,0 +1,8 @@
+<!-- app/views/orders/checkout.html.erb -->
+<h1>Checkout</h1>
+
+<%= form_with model: @order, url: create_order_orders_path, method: :post do |f| %>
+  <%# Display cart items here %>
+
+  <%= f.submit 'Place Order' %>
+<% end %>

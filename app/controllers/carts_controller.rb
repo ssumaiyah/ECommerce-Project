@@ -1,39 +1,45 @@
-# app/controllers/carts_controller.rb
-class CartsController < ApplicationController
+class CartController < ApplicationController
+  before_action :authenticate_user! # Ensure user is logged in
+
   def show
-    @cart_items = session[:cart] || []
+    @cart = current_cart
   end
 
-  def add_to_cart
-    product_id = params[:product_id].to_i
-    quantity = params[:quantity].to_i
-    product = Product.find(product_id)
-
-    session[:cart] ||= []
-    session[:cart] << { product_id: product_id, quantity: quantity }
-
-    redirect_to cart_path, notice: "#{product.name} was successfully added to your cart."
+  def add_item
+    product = Product.find(params[:product_id])
+    current_cart.add_product(product.id, params[:quantity].to_i)
+    redirect_to cart_path, notice: 'Product added to cart.'
   end
 
-  def remove_from_cart
-    product_id = params[:product_id].to_i
-
-    session[:cart]&.reject! { |item| item[:product_id] == product_id }
-
-    redirect_to cart_path, notice: "Product was successfully removed from your cart."
+  def update_item
+    order_item = current_cart.order_items.find(params[:order_item_id])
+    order_item.update(quantity: params[:quantity].to_i)
+    redirect_to cart_path, notice: 'Cart updated.'
   end
-  def show
-    @cart_items = session[:cart] || []  # Assuming your cart items are stored in session
 
-    # Fetch products for each cart item
-    @products_in_cart = @cart_items.map do |item|
-      product = Product.find_by(id: item[:product_id])
-      if product.present?
-        { quantity: item[:quantity], product: product }
-      else
-        # Handle case where product is not found (optional)
-        { quantity: item[:quantity], product: nil }
-      end
+  def remove_item
+    order_item = current_cart.order_items.find(params[:order_item_id])
+    order_item.destroy
+    redirect_to cart_path, notice: 'Product removed from cart.'
+  end
+
+  private
+
+  def current_cart
+    @current_cart ||= find_or_create_cart
+  end
+
+  def find_or_create_cart
+    if session[:order_id]
+      order = current_user.orders.find_by(id: session[:order_id], status: 'in_progress')
+      return order if order
     end
+    create_new_cart
+  end
+
+  def create_new_cart
+    order = current_user.orders.create(status: 'in_progress')
+    session[:order_id] = order.id
+    order
   end
 end

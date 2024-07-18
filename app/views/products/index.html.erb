@@ -1,14 +1,16 @@
-
 <div class="pagination">
-  <%= paginate @products %>
+  <%= paginate @products if @products.present? %>
 </div>
 
-<!-- List of products -->
 <ul>
-  <% @products.each do |product| %>
-    <li>
-      <%= link_to product.name, product_path(product) %>
-      
-    </li>
+  <% if @products.present? %>
+    <% @products.each do |product| %>
+      <li>
+        <%= link_to product.name, product_path(product) %>
+        <!-- Add more product details here as needed -->
+      </li>
+    <% end %>
+  <% else %>
+    <p>No products found.</p>
   <% end %>
 </ul>
