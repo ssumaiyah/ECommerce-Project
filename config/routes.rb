@@ -17,14 +17,17 @@ Rails.application.routes.draw do
   end
 
   resource :cart, only: [:show] do
-    post 'add_item/:product_id', action: :add_item, as: 'add_item'
-    patch 'update_item/:order_item_id', action: :update_item, as: 'update_item'
-    delete 'remove_item/:order_item_id', action: :remove_item, as: 'remove_item'
+    collection do
+      post 'add_item'
+      patch 'update_item/:id', to: 'carts#update_item', as: 'update_item'
+      delete 'remove_item/:id', to: 'carts#remove_item', as: 'remove_item'
+      get 'checkout'
+      post 'place_order'
+    end
   end
 
   resources :orders, only: [:show]
   get 'orders/:id', to: 'orders#show', as: 'order_details'
-
 
   resources :users
   resources :artisans

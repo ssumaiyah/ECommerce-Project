@@ -1,0 +1,25 @@
+<h1>Checkout</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order_items.each do |item| %>
+      <tr>
+        <td><%= item.product.name %></td>
+        <td><%= item.quantity %></td>
+        <td><%= number_to_currency(item.product.price * item.quantity) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>Total Price: <%= number_to_currency(@total_price) %></p>
+<p>Total Price with Tax (15%): <%= number_to_currency(@total_with_tax) %></p>
+
+<%= link_to 'Place Order', place_order_cart_path, method: :post, class: 'btn btn-success' %>

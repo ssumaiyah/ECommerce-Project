@@ -1,8 +1,8 @@
-class CartController < ApplicationController
-  before_action :authenticate_user! # Ensure user is logged in
+class CartsController < ApplicationController
+  before_action :authenticate_user!
 
   def show
-    @cart = current_cart
+    @order_items = current_cart.order_items
   end
 
   def add_item
@@ -12,13 +12,13 @@ class CartController < ApplicationController
   end
 
   def update_item
-    order_item = current_cart.order_items.find(params[:order_item_id])
+    order_item = current_cart.order_items.find(params[:id])
     order_item.update(quantity: params[:quantity].to_i)
     redirect_to cart_path, notice: 'Cart updated.'
   end
 
   def remove_item
-    order_item = current_cart.order_items.find(params[:order_item_id])
+    order_item = current_cart.order_items.find(params[:id])
     order_item.destroy
     redirect_to cart_path, notice: 'Product removed from cart.'
   end

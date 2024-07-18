@@ -1,13 +1,26 @@
-<!-- app/views/carts/show.html.erb -->
-<h1>Shopping Cart</h1>
+<h1>Order Details</h1>
 
 <ul>
-  <% @products_in_cart.each do |item| %>
-    <li>
-      <%= item[:quantity] %> x <%= item[:product].present? ? item[:product].name : 'Product not found' %>
-      <!-- Add other details like price, total, etc. as needed -->
-    </li>
+  <% if @order_items.any? %>
+    <% @order_items.each do |order_item| %>
+      <li>
+        <%= order_item.quantity %> x 
+        <% if order_item.product.present? %>
+          <%= link_to order_item.product.name, product_path(order_item.product) %>
+        <% else %>
+          Product not found
+        <% end %>
+        - <%= number_to_currency(order_item.total_price) %>
+      </li>
+    <% end %>
+  <% else %>
+    <li>No items in the order.</li>
   <% end %>
 </ul>
 
-<%= link_to 'Back to Products', products_path %>
+<p><strong>Status:</strong> <%= @order.status.humanize %></p>
+<% if @order.status == 'pending' %>
+  <%= link_to 'Checkout', checkout_path(@order), class: 'btn btn-primary' %>
+<% end %>
+
+<%= link_to 'Back to Products', products_path, class: 'btn btn-secondary' %>

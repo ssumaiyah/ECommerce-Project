@@ -1,39 +1,34 @@
-class ProductsController < ApplicationController
-  before_action :set_product, only: [:show, :add_item_cart]
 
-  def index
-    @products = Product.page(params[:page]).per(10)
-  end
+  class ProductsController < ApplicationController
+    before_action :set_product, only: [:show, :edit, :add_item_cart]
+    before_action :authenticate_user!, only: [:add_item_cart]
   
+    def index
+      @products = Product.page(params[:page]).per(10)
+    end
   
-  def show
-    # Your existing show action code
-  end
-
-  def add_item_cart
-    quantity = params[:quantity].to_i
-    current_order.add_product(@product.id, quantity)
-    redirect_to product_path(@product), notice: 'Product added to cart successfully!'
-  end
-
-  private
-
-  def set_product
-    @product = Product.find(params[:id])
-  end
-
-  def current_order
-    # Find or create the current order for the user with 'in_progress' status
-    @current_order ||= current_user.orders.in_progress.last || current_user.orders.create(status: 'in_progress', order_date: Date.today)
-  end
-
+    def show
+    end
   
-   
+    def add_item_cart
+      product = Product.find(params[:id])
+      current_order.add_product(product.id, params[:quantity].to_i)
+      redirect_to product_path(product), notice: 'Product added to cart.'
+    end
+  
+    private
+  
+    def current_order
+      @current_order ||= current_user.orders.in_progress.last || current_user.orders.create(status: 'in_progress', order_date: Date.today)
+    end
+  
+    def set_product
+      @product = Product.find(params[:id])
+    end
+  
+    
  
 
-  def show
-    @product = Product.find(params[:id])
-  end
 
   def edit
     @product = Product.find(params[:id])
