@@ -1,6 +1,12 @@
 class CartsController < ApplicationController
   before_action :authenticate_user!
 
+  def remove_item
+    order_item = current_cart.order_items.find(params[:id])
+    order_item.destroy
+    redirect_to cart_path, notice: 'Item removed from cart.'
+  end
+  
   def show
     @order_items = current_cart.order_items
   end
@@ -17,11 +23,7 @@ class CartsController < ApplicationController
     redirect_to cart_path, notice: 'Cart updated.'
   end
 
-  def remove_item
-    order_item = current_cart.order_items.find(params[:id])
-    order_item.destroy
-    redirect_to cart_path, notice: 'Product removed from cart.'
-  end
+ 
 
   private
 

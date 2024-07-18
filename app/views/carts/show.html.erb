@@ -1,4 +1,4 @@
-<!-- app/views/orders/show.html.erb -->
+<!-- app/views/carts/show.html.erb -->
 
 <h1>Your Shopping Cart</h1>
 
@@ -18,7 +18,7 @@
         <tr>
           <td><%= item.product.name %></td>
           <td>
-            <%= form_tag update_item_order_path(item), method: :patch do %>
+            <%= form_tag update_item_cart_path(id: item.id), method: :patch do %>
               <%= number_field_tag 'quantity', item.quantity, min: 1 %>
               <%= submit_tag 'Update' %>
             <% end %>
@@ -26,7 +26,7 @@
           <td><%= number_to_currency(item.product.price) %></td>
           <td><%= number_to_currency(item.total_price) %></td>
           <td>
-            <%= link_to 'Remove', remove_item_order_path(item), method: :delete, data: { confirm: 'Are you sure?' } %>
+            <%= link_to 'Remove', remove_item_cart_path(id: item.id), method: :delete, data: { confirm: 'Are you sure?' } %>
           </td>
         </tr>
       <% end %>
