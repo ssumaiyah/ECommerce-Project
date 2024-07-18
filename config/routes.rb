@@ -16,6 +16,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :orders, only: [] do
+    member do
+      patch 'update_item/:id', to: 'orders#update_item', as: 'update_item'
+      delete 'remove_item/:id', to: 'orders#remove_item', as: 'remove_item'
+    end
+  end
+  
   resource :cart, only: [:show] do
     collection do
       post 'add_item'
