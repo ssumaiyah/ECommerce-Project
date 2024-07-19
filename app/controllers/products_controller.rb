@@ -4,6 +4,8 @@ class ProductsController < ApplicationController
 
   def index
     @products = Product.page(params[:page]).per(10)
+    @new_products = Product.new_products
+    @recently_updated_products = Product.recently_updated
   end
 
   def search

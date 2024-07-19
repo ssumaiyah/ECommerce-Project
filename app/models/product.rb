@@ -11,6 +11,9 @@ class Product < ApplicationRecord
     ["id", "name", "description", "price", "quantity_available", "artisan_id", "created_at","updated_at"]
   end
 
+  scope :new_products, -> { where('created_at >= ?', 3.days.ago) }
+  scope :recently_updated, -> { where('updated_at >= ? AND created_at < ?', 3.days.ago, 3.days.ago) }
+  
   validates :name, presence: true
   validates :description, presence: true
   validates :price, numericality: { greater_than_or_equal_to: 0 }

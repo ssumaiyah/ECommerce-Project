@@ -14,3 +14,16 @@
     <p>No products found.</p>
   <% end %>
 </ul>
+<h1>New Products</h1>
+<ul>
+  <% @new_products.each do |product| %>
+    <li><%= product.name %></li>
+  <% end %>
+</ul>
+
+<h1>Recently Updated Products</h1>
+<ul>
+  <% @recently_updated_products.each do |product| %>
+    <li><%= product.name %></li>
+  <% end %>
+</ul>
