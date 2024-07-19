@@ -3,10 +3,21 @@ class ProductsController < ApplicationController
   before_action :authenticate_user!, only: [:add_item_cart]
 
   def index
-    @products = Product.page(params[:page]).per(10)
-    @new_products = Product.new_products
-    @recently_updated_products = Product.recently_updated
-  end
+   
+   
+    filter_type = params[:filter]
+    
+    @products = case filter_type
+                when 'new'
+                  Product.where('created_at >= ?', 3.days.ago)
+                when 'recently_updated'
+                  Product.where('updated_at >= ?', 3.days.ago).where('created_at < ?', 3.days.ago)
+                else
+                  Product.all
+                end
+                @products = @products.page(params[:page]).per(10)
+    end
+
 
   def search
     @search_query = params[:search]
