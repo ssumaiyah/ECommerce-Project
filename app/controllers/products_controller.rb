@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: [:show, :edit, :add_item_cart], except: [:index, :search]
+  before_action :set_product, only: [:show,:update, :edit, :add_item_cart], except: [:index, :search]
   before_action :authenticate_user!, only: [:add_item_cart]
 
   def index
