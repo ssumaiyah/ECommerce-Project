@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       post 'place_order'
     end
   end
+  
 
   resources :orders, only: [:show] do
     member do

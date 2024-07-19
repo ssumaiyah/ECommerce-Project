@@ -6,7 +6,7 @@ class CartsController < ApplicationController
     order_item.destroy
     redirect_to cart_path, notice: 'Item removed from cart.'
   end
-  
+
   def show
     @order_items = current_cart.order_items
   end
