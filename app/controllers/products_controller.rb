@@ -1,55 +1,9 @@
+class ProductsController < ApplicationController
+  before_action :set_product, only: [:show, :edit, :add_item_cart], except: [:index, :search]
+  before_action :authenticate_user!, only: [:add_item_cart]
 
-  class ProductsController < ApplicationController
-    before_action :set_product, only: [:show, :edit, :add_item_cart]
-    before_action :authenticate_user!, only: [:add_item_cart]
-  
-    def index
-      @products = Product.page(params[:page]).per(10)
-    end
-  
-    def show
-    end
-  
-    def add_item_cart
-      product = Product.find(params[:id])
-      current_order.add_product(product.id, params[:quantity].to_i)
-      redirect_to product_path(product), notice: 'Product added to cart.'
-    end
-  
-    private
-  
-    def current_order
-      @current_order ||= current_user.orders.in_progress.last || current_user.orders.create(status: 'in_progress', order_date: Date.today)
-    end
-  
-    def set_product
-      @product = Product.find(params[:id])
-    end
-  
-    
- 
-
-
-  def edit
-    @product = Product.find(params[:id])
-  end
-  
-  def create
-    @product = Product.new(product_params)
-    if @product.save
-      redirect_to @product, notice: 'Product was successfully created.'
-    else
-      render :new
-    end
-  end
-  
-  def update
-    @product = Product.find(params[:id])
-    if @product.update(product_params)
-      redirect_to @product, notice: 'Product was successfully updated.'
-    else
-      render :edit
-    end
+  def index
+    @products = Product.page(params[:page]).per(10)
   end
 
   def search
@@ -74,14 +28,48 @@
 
     # Render the search results view
     render 'search_results'
-  end
-  def show
-    # Your existing show action code
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_path, notice: 'No products found.'
+
   end
 
- 
+  def add_item_cart
+    @product = Product.find(params[:id])
+    current_order.add_product(@product.id, params[:quantity].to_i)
+    redirect_to product_path(@product), notice: 'Product added to cart.'
+  end
+
+  def edit
+    # No need to define @product here, it's already set by the before_action callback
+  end
+
+  def create
+    @product = Product.new(product_params)
+    if @product.save
+      redirect_to @product, notice: 'Product was successfully created.'
+    else
+      render :new
+    end
+  end
+
+  def update
+    # No need to define @product here, it's already set by the before_action callback
+    if @product.update(product_params)
+      redirect_to @product, notice: 'Product was successfully updated.'
+    else
+      render :edit
+    end
+  end
 
   private
+
+  def current_order
+    @current_order ||= current_user.orders.in_progress.last || current_user.orders.create(status: 'in_progress', order_date: Date.today)
+  end
+
+  def set_product
+    @product = Product.find(params[:id])
+  end
 
   def product_params
     params.require(:product).permit(:artisan_id, :name, :description, :price, :quantity_available, :image)

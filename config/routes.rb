@@ -9,13 +9,14 @@ Rails.application.routes.draw do
   get 'about', to: 'pages#about'
   get 'contact', to: 'pages#contact'
 
-  resources :products, only: [:index, :show, :edit, :update] do
+  resources :products, only: [:index, :show, :edit, :update, :search] do
     post 'add_item_cart', on: :member
     collection do
       get 'search', to: 'products#search', as: 'search'
     end
   end
 
+  
   resource :cart, only: [:show] do
     collection do
       post 'add_item'
