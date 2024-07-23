@@ -4,11 +4,13 @@ class OrderItem < ApplicationRecord
   belongs_to :product
 
   validates :quantity, numericality: { only_integer: true, greater_than: 0 }
+  validates :order_id, presence: true
+  validates :product_id, presence: true
+  validates :price_at_purchase, numericality: { greater_than_or_equal_to: 0 }
 
   def total_price
     product.price * quantity
   end
-
 
   def self.ransackable_attributes(auth_object = nil)
     ["id", "order_id", "product_id", "price_at_purchase", "quantity", "created_at", "updated_at"]
