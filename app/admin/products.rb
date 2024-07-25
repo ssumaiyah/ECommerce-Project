@@ -1,5 +1,3 @@
-# app/admin/products.rb
-
 ActiveAdmin.register Product do
   filter :image_attachment_id
   permit_params :name, :description, :price, :quantity_available, :artisan_id, :image, category_ids: [], new_category_name: nil
@@ -78,7 +76,7 @@ ActiveAdmin.register Product do
     end
     column :categories do |product|
       product.categories.map(&:name).join(', ')
-    end
+    end 
     actions
   end
 end
