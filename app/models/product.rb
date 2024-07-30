@@ -14,10 +14,10 @@ class Product < ApplicationRecord
   scope :new_products, -> { where('created_at >= ?', 3.days.ago) }
   scope :recently_updated, -> { where('updated_at >= ? AND created_at < ?', 3.days.ago, 3.days.ago) }
   
-  validates :name, presence: true
-  validates :description, presence: true
-  validates :price, numericality: { greater_than_or_equal_to: 0 }
-  validates :quantity_available, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  #validates :name, presence: true
+  #validates :description, presence: true
+  #validates :price, numericality: { greater_than_or_equal_to: 0 }
+  #validates :quantity_available, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   def self.ransackable_associations(auth_object = nil)
     ["artisan","order_items","product_categories","categories","reviews"]

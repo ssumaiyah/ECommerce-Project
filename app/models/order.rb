@@ -4,11 +4,11 @@ class Order < ApplicationRecord
   belongs_to :user
   has_many :order_items, dependent: :destroy
 
-  validates :user, presence: true
-  validates :status, presence: true, inclusion: { in: %w[in_progress completed cancelled], message: "%{value} is not a valid status" }
-  validates :subtotal, numericality: { greater_than_or_equal_to: 0 }, presence: true
-  validates :total_amount, numericality: { greater_than_or_equal_to: 0 }, presence: true
-  validates :order_date, presence: true
+ # validates :user, presence: true
+  #validates :status, presence: true, inclusion: { in: %w[in_progress completed cancelled], message: "%{value} is not a valid status" }
+  #validates :subtotal, numericality: { greater_than_or_equal_to: 0 }, presence: true
+  #validates :total_amount, numericality: { greater_than_or_equal_to: 0 }, presence: true
+  #validates :order_date, presence: true
   
   scope :in_progress, -> { where(status: 'in_progress') }
 

@@ -13,10 +13,7 @@ Category.destroy_all
 OrderTaxRate.delete_all
 TaxRatesProvince.delete_all
 TaxRate.delete_all
-User.delete_all
 Province.delete_all
-
-
 
 # List of provinces and their tax rates
 provinces_with_tax_rates = [
@@ -37,14 +34,36 @@ provinces_with_tax_rates = [
 
 # Seed Provinces table
 provinces_with_tax_rates.each do |province|
-  Province.create!(name: province[:name])
+  Province.create!(
+    name: province[:name],
+    created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
+    updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
+  )
 end
 
 # Seed TaxRates table
 provinces_with_tax_rates.each do |province|
-  TaxRate.create!(name: "#{province[:name]} GST", rate: province[:gst], tax_type: 'GST')
-  TaxRate.create!(name: "#{province[:name]} PST", rate: province[:pst], tax_type: 'PST') if province[:pst] > 0
-  TaxRate.create!(name: "#{province[:name]} HST", rate: province[:hst], tax_type: 'HST') if province[:hst] > 0
+  TaxRate.create!(
+    name: "#{province[:name]} GST",
+    rate: province[:gst],
+    tax_type: 'GST',
+    created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
+    updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
+  )
+  TaxRate.create!(
+    name: "#{province[:name]} PST",
+    rate: province[:pst],
+    tax_type: 'PST',
+    created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
+    updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
+  ) if province[:pst] > 0
+  TaxRate.create!(
+    name: "#{province[:name]} HST",
+    rate: province[:hst],
+    tax_type: 'HST',
+    created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
+    updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
+  ) if province[:hst] > 0
 end
 
 # Seed users table
@@ -53,14 +72,13 @@ end
   User.create!(
     name: Faker::Name.name,
     email: Faker::Internet.email,
-    password: password,  # This line is crucial for bypassing Devise validations
-    password_confirmation: password,  # Optional, but recommended if you have a confirmation field
+    password: password,
+    password_confirmation: password,
     created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
     updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
     province_id: Province.pluck(:id).sample
   )
 end
-
 
 # Create artisans
 80.times do
@@ -88,6 +106,7 @@ batch_size = 10
     end
   )
 end
+
 # Create products and associate them with artisans and categories
 200.times do
   product = Product.create!(
@@ -118,7 +137,7 @@ end
     subtotal: Faker::Commerce.price(range: 50.0..100.0),
     total_amount: Faker::Commerce.price(range: 50.0..100.0),
     order_date: Faker::Date.between(from: 1.year.ago, to: Date.today),
-    status: ['pending', 'paid', 'shipped', 'completed', 'cancelled'].sample,
+    status: ['pending', 'paid', 'shipped', 'completed', 'cancelled' ].sample,
     created_at: Faker::Time.between(from: 1.year.ago, to: Date.today),
     updated_at: Faker::Time.between(from: 1.year.ago, to: Date.today)
   )
@@ -134,7 +153,6 @@ end
     )
   end
 end
-
 
 # Seed OrderTaxRates table
 10.times do
