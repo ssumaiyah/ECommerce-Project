@@ -6,7 +6,7 @@ class AdminUser < ApplicationRecord
 
          validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
          validates :encrypted_password, presence: true
-         validates :id_value, presence: true
+        # validates :id_value, presence: true
          
          def self.ransackable_attributes(auth_object = nil)
           ["created_at", "email", "encrypted_password", "id", "id_value", "remember_created_at", "reset_password_sent_at", "reset_password_token", "updated_at"]
