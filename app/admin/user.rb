@@ -1,6 +1,6 @@
 # app/admin/user.rb
 ActiveAdmin.register User do
-  permit_params :name, :email, :password_digest
+  permit_params :name, :email,:password, :password_confirmation
 
   filter :name
 
@@ -9,6 +9,7 @@ ActiveAdmin.register User do
     id_column
     column :name
     column :email
+    column :encrypted_password
     actions
   end
 
@@ -19,8 +20,24 @@ ActiveAdmin.register User do
     f.inputs "User Details" do
       f.input :name
       f.input :email
-      f.input :password_digest
+      f.input :password
+      f.input :password_confirmation
+      
     end
     f.actions
   end
+
+  show do
+    attributes_table do
+      row :id
+      row :name
+      row :email
+      row :encrypted_password
+      row :created_at
+      row :updated_at
+      row :province
+    end
+    active_admin_comments
+  end
+  
 end
