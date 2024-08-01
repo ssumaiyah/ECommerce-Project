@@ -1,12 +1,6 @@
 # app/controllers/users/sessions_controller.rb
 
-class Users::SessionsController < Devise::SessionsController
-  
-  def create
-    super
-  end
-  
-  def destroy
-    super
+module Users
+  class SessionsController < Devise::SessionsController
   end
 end

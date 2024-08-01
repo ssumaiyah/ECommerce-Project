@@ -1,23 +1,21 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: [:show,:update, :edit, :add_item_cart], except: [:index, :search]
+  before_action :set_product, only:   %i[show update edit add_item_cart],
+                              except: %i[index search]
   before_action :authenticate_user!, only: [:add_item_cart]
 
   def index
-   
-   
     filter_type = params[:filter]
-    
+
     @products = case filter_type
-                when 'new'
-                  Product.where('created_at >= ?', 3.days.ago)
-                when 'recently_updated'
-                  Product.where('updated_at >= ?', 3.days.ago).where('created_at < ?', 3.days.ago)
+                when "new"
+                  Product.where("created_at >= ?", 3.days.ago)
+                when "recently_updated"
+                  Product.where("updated_at >= ?", 3.days.ago).where("created_at < ?", 3.days.ago)
                 else
                   Product.all
                 end
-                @products = @products.page(params[:page]).per(10)
-    end
-
+    @products = @products.page(params[:page]).per(10)
+  end
 
   def search
     @search_query = params[:search]
@@ -33,23 +31,23 @@ class ProductsController < ApplicationController
 
     # Apply search query if present
     if @search_query.present?
-      @products = @products.where("products.name LIKE ? OR products.description LIKE ?", "%#{@search_query}%", "%#{@search_query}%")
+      @products = @products.where("products.name LIKE ? OR products.description LIKE ?",
+                                  "%#{@search_query}%", "%#{@search_query}%")
     end
 
     # Paginate the results
     @products = @products.distinct.page(params[:page]).per(10)
 
     # Render the search results view
-    render 'search_results'
+    render "search_results"
   rescue ActiveRecord::RecordNotFound
-    redirect_to root_path, notice: 'No products found.'
-
+    redirect_to root_path, notice: "No products found."
   end
 
   def add_item_cart
     @product = Product.find(params[:id])
     current_order.add_product(@product.id, params[:quantity].to_i)
-    redirect_to product_path(@product), notice: 'Product added to cart.'
+    redirect_to product_path(@product), notice: "Product added to cart."
   end
 
   def edit
@@ -59,7 +57,7 @@ class ProductsController < ApplicationController
   def create
     @product = Product.new(product_params)
     if @product.save
-      redirect_to @product, notice: 'Product was successfully created.'
+      redirect_to @product, notice: "Product was successfully created."
     else
       render :new
     end
@@ -68,7 +66,7 @@ class ProductsController < ApplicationController
   def update
     # No need to define @product here, it's already set by the before_action callback
     if @product.update(product_params)
-      redirect_to @product, notice: 'Product was successfully updated.'
+      redirect_to @product, notice: "Product was successfully updated."
     else
       render :edit
     end
@@ -77,7 +75,9 @@ class ProductsController < ApplicationController
   private
 
   def current_order
-    @current_order ||= current_user.orders.in_progress.last || current_user.orders.create(status: 'in_progress', order_date: Date.today)
+    @current_order ||= current_user.orders.in_progress.last || current_user.orders.create(
+      status: "in_progress", order_date: Time.zone.today
+    )
   end
 
   def set_product
@@ -85,6 +85,7 @@ class ProductsController < ApplicationController
   end
 
   def product_params
-    params.require(:product).permit(:artisan_id, :name, :description, :price, :quantity_available, :image)
+    params.require(:product).permit(:artisan_id, :name, :description, :price, :quantity_available,
+                                    :image)
   end
 end

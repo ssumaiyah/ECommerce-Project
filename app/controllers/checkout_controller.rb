@@ -8,7 +8,7 @@ class CheckoutController < ApplicationController
 
   def create
     @order = current_cart
-    @order.status = 'completed'
+    @order.status = "completed"
     if @order.save
       OrderMailer.order_confirmation(@order).deliver_now
       redirect_to order_path(@order)
@@ -20,6 +20,6 @@ class CheckoutController < ApplicationController
   private
 
   def current_cart
-    current_user.orders.find_or_create_by(status: 'cart')
+    current_user.orders.find_or_create_by(status: "cart")
   end
 end

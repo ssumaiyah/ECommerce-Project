@@ -7,10 +7,8 @@ class CategoriesController < ApplicationController
     @category = Category.find(params[:id])
     @products = @category.products.page(params[:page]).per(10)
   end
-  
-  def new
-  end
 
-  def edit
-  end
+  def new; end
+
+  def edit; end
 end

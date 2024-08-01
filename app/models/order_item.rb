@@ -3,10 +3,9 @@ class OrderItem < ApplicationRecord
   belongs_to :order
   belongs_to :product
 
- validates :quantity, numericality: { only_integer: true, greater_than: 0 }
-  #validates :order_id, presence: true
-  #validates :product_id, presence: true
-
+  validates :quantity, numericality: { only_integer: true, greater_than: 0 }
+  # validates :order_id, presence: true
+  # validates :product_id, presence: true
 
   def total_price
     product.price * quantity

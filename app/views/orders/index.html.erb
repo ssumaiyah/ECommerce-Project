@@ -1,2 +1,24 @@
-<h1>Orders#index</h1>
-<p>Find me in app/views/orders/index.html.erb</p>
+<h1>Your Past Orders</h1>
+
+<% @orders.each do |order| %>
+  <div class="order">
+    <h2>Order #<%= order.id %></h2>
+    <p>Order Date: <%= order.created_at.strftime("%B %d, %Y") %></p>
+
+    <h3>Products Ordered:</h3>
+    <ul>
+      <% order.order_items.each do |item| %>
+        <li><%= item.product.name %> - Quantity: <%= item.quantity %></li>
+      <% end %>
+    </ul>
+
+    <h3>Taxes:</h3>
+    <ul>
+      <% order.order_tax_rates.each do |tax_rate| %>
+        <li><%= tax_rate.tax_rate.name %>: <%= tax_rate.amount %></li>
+      <% end %>
+    </ul>
+
+    <h3>Grand Total: <%= order.total_amount %></h3>
+  </div>
+<% end %>
