@@ -18,7 +18,9 @@
   <% end %>
 </ul>
 
+<p><strong>Total Amount:</strong> <%= number_to_currency(@order.total_amount) %></p>
 <p><strong>Status:</strong> <%= @order.status.humanize %></p>
+
 <% if @order.status == 'pending' %>
   <%= link_to 'Checkout', checkout_path(@order), class: 'btn btn-primary' %>
 <% end %>

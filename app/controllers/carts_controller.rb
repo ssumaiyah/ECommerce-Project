@@ -39,19 +39,21 @@ class CartsController < ApplicationController
   end
 
 
+ 
   def place_order
     @order = current_cart
-
+  
     if @order.update(order_params)
-      @order.update(
-        status: 'completed'
-      )
+      @order.calculate_totals # Ensure totals are recalculated
+      @order.update(status: 'completed')
       session[:order_id] = nil
       redirect_to order_path(@order), notice: 'Order successfully placed!'
     else
       render :checkout
     end
   end
+  
+  
 
   private 
 
@@ -88,8 +90,8 @@ end
   end
 
   def order_params
-    params.require(:order).permit(:subtotal, :total_amount, :order_date, :province_id, :address)
-  end
+  params.require(:order).permit(:subtotal, :total_amount, :order_date, :province_id, :address, :status)
+end
 
   def set_provinces
     @provinces = Province.all

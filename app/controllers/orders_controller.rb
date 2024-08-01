@@ -18,8 +18,15 @@ class OrdersController < ApplicationController
   def show
     @order = current_user.orders.find(params[:id])
     @order_items = @order.order_items.includes(:product)
+    @subtotal = @order.subtotal
+    @total_amount = @order.total_amount
+    @taxes = {
+      pst: @order.tax_rates.find_by(tax_type: 'PST')&.rate.to_f / 100 * @subtotal,
+      gst: @order.tax_rates.find_by(tax_type: 'GST')&.rate.to_f / 100 * @subtotal,
+      hst: @order.tax_rates.find_by(tax_type: 'HST')&.rate.to_f / 100 * @subtotal,
+      qst: @order.tax_rates.find_by(tax_type: 'QST')&.rate.to_f / 100 * @subtotal
+    }
   end
-
   def add_to_cart
     @order = current_user.orders.in_progress.first_or_create
     @order.add_product(params[:product_id], 1) # Adjust quantity as needed

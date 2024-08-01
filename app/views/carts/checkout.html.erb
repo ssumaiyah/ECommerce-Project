@@ -28,7 +28,13 @@
   <h2>QST: <%= number_to_currency(@taxes[:qst] || 0) %></h2>
   <h2>Total Amount: <%= number_to_currency(@total_amount) %></h2>
 
-  <%= form_for @order, url: place_order_cart_path do |f| %>
+ 
+  <%= form_for @order, url: place_order_cart_path, method: :post do |f| %>
+    <%= f.hidden_field :subtotal, value: @subtotal %>
+    <%= f.hidden_field :total_amount, value: @total_amount %>
+    <%= f.hidden_field :province_id, value: current_user.province_id %>
+    <%= f.hidden_field :address, value: current_user.address %>
+
     <div>
       <%= f.submit 'Place Order' %>
     </div>
