@@ -4,7 +4,12 @@ ActiveAdmin.register OrderItem do
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
   # Uncomment all parameters which should be permitted for assignment
-  #
+  
+  filter :order_id
+  filter :product
+  filter :quantity
+  filter :price_at_purchase
+  filter :created_at
    permit_params :order_id, :product_id, :quantity, :price_at_purchase
   #
   # or

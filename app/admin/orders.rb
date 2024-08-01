@@ -5,6 +5,8 @@ ActiveAdmin.register Order do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
+   filter :province_id
+
   permit_params :user_id, :total_amount, :order_date, :status
   #
   # or

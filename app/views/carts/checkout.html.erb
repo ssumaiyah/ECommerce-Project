@@ -1,16 +1,38 @@
-<!-- app/views/carts/checkout.html.erb -->
 <h1>Checkout</h1>
 
-<%= form_with model: @order, url: place_order_cart_path, local: true do |form| %>
-  <div>
-    <%= form.label :province_id, "Province" %>
-    <%= form.collection_select :province_id, @provinces, :id, :name, include_blank: "Select your province" %>
-  </div>
-  <div>
-    <%= form.label :address, "Address" %>
-    <%= form.text_area :address %>
-  </div>
-  <div>
-    <%= form.submit "Place Order" %>
-  </div>
+<% if @order_items.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @order_items.each do |item| %>
+        <tr>
+          <td><%= item.product.name %></td>
+          <td><%= item.quantity %></td>
+          <td><%= number_to_currency(item.product.price) %></td>
+          <td><%= number_to_currency(item.total_price) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <h2>Subtotal: <%= number_to_currency(@subtotal) %></h2>
+  <h2>PST: <%= number_to_currency(@taxes[:pst] || 0) %></h2>
+  <h2>GST: <%= number_to_currency(@taxes[:gst] || 0) %></h2>
+  <h2>HST: <%= number_to_currency(@taxes[:hst] || 0) %></h2>
+  <h2>QST: <%= number_to_currency(@taxes[:qst] || 0) %></h2>
+  <h2>Total Amount: <%= number_to_currency(@total_amount) %></h2>
+
+  <%= form_for @order, url: place_order_cart_path do |f| %>
+    <div>
+      <%= f.submit 'Place Order' %>
+    </div>
+  <% end %>
+<% else %>
+  <p>Your cart is empty.</p>
 <% end %>

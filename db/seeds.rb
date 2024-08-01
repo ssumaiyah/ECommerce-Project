@@ -16,20 +16,21 @@ TaxRate.delete_all
 Province.delete_all
 
 # List of provinces and their tax rates
+
 provinces_with_tax_rates = [
-  { name: 'Alberta', gst: 5, pst: 0, hst: 0 },
-  { name: 'British Columbia', gst: 5, pst: 7, hst: 0 },
-  { name: 'Manitoba', gst: 5, pst: 7, hst: 0 },
-  { name: 'New Brunswick', gst: 0, pst: 0, hst: 15 },
-  { name: 'Newfoundland and Labrador', gst: 0, pst: 0, hst: 15 },
-  { name: 'Northwest Territories', gst: 5, pst: 0, hst: 0 },
-  { name: 'Nova Scotia', gst: 0, pst: 0, hst: 15 },
-  { name: 'Nunavut', gst: 5, pst: 0, hst: 0 },
-  { name: 'Ontario', gst: 0, pst: 0, hst: 13 },
-  { name: 'Prince Edward Island', gst: 0, pst: 0, hst: 15 },
-  { name: 'Quebec', gst: 5, pst: 9.975, hst: 0 },
-  { name: 'Saskatchewan', gst: 5, pst: 6, hst: 0 },
-  { name: 'Yukon', gst: 5, pst: 0, hst: 0 }
+  { name: 'Alberta', gst: 5, pst: 0, hst: 0, qst: 0 },
+  { name: 'British Columbia', gst: 5, pst: 7, hst: 0, qst: 0 },
+  { name: 'Manitoba', gst: 5, pst: 7, hst: 0, qst: 0 },
+  { name: 'New Brunswick', gst: 0, pst: 0, hst: 15, qst: 0 },
+  { name: 'Newfoundland and Labrador', gst: 0, pst: 0, hst: 15, qst: 0 },
+  { name: 'Northwest Territories', gst: 5, pst: 0, hst: 0, qst: 0 },
+  { name: 'Nova Scotia', gst: 0, pst: 0, hst: 15, qst: 0 },
+  { name: 'Nunavut', gst: 5, pst: 0, hst: 0, qst: 0 },
+  { name: 'Ontario', gst: 0, pst: 0, hst: 13, qst: 0 },
+  { name: 'Prince Edward Island', gst: 0, pst: 0, hst: 15, qst: 0 },
+  { name: 'Quebec', gst: 5, pst: 9.975, hst: 0, qst: 9.975 },
+  { name: 'Saskatchewan', gst: 5, pst: 6, hst: 0, qst: 0 },
+  { name: 'Yukon', gst: 5, pst: 0, hst: 0, qst: 0 }
 ]
 
 # Seed Provinces table
@@ -43,29 +44,42 @@ end
 
 # Seed TaxRates table
 provinces_with_tax_rates.each do |province|
-  TaxRate.create!(
+  gst_tax_rate = TaxRate.create!(
     name: "#{province[:name]} GST",
     rate: province[:gst],
     tax_type: 'GST',
     created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
     updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
   )
-  TaxRate.create!(
+  pst_tax_rate = TaxRate.create!(
     name: "#{province[:name]} PST",
     rate: province[:pst],
     tax_type: 'PST',
     created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
     updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
   ) if province[:pst] > 0
-  TaxRate.create!(
+  hst_tax_rate = TaxRate.create!(
     name: "#{province[:name]} HST",
     rate: province[:hst],
     tax_type: 'HST',
     created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
     updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
   ) if province[:hst] > 0
-end
+  qst_tax_rate = TaxRate.create!(
+    name: "#{province[:name]} QST",
+    rate: province[:qst],
+    tax_type: 'QST',
+    created_at: Faker::Time.between(from: 2.years.ago, to: Date.today),
+    updated_at: Faker::Time.between(from: 2.years.ago, to: Date.today)
+  ) if province[:qst] > 0
 
+  # Associate tax rates with provinces
+  province_record = Province.find_by(name: province[:name])
+  TaxRatesProvince.create!(tax_rate: gst_tax_rate, province: province_record)
+  TaxRatesProvince.create!(tax_rate: pst_tax_rate, province: province_record) if pst_tax_rate
+  TaxRatesProvince.create!(tax_rate: hst_tax_rate, province: province_record) if hst_tax_rate
+  TaxRatesProvince.create!(tax_rate: qst_tax_rate, province: province_record) if qst_tax_rate
+end
 # Seed users table
 50.times do
   password = 'password123'
@@ -134,16 +148,17 @@ end
 100.times do
   order = Order.create!(
     user: User.order('RANDOM()').first,
-    subtotal: Faker::Commerce.price(range: 50.0..100.0),
-    total_amount: Faker::Commerce.price(range: 50.0..100.0),
+    subtotal: 0.0,  # Initialize as 0, will be updated
+    total_amount: 0.0,  # Initialize as 0, will be updated
     order_date: Faker::Date.between(from: 1.year.ago, to: Date.today),
-    status: ['pending', 'paid', 'shipped', 'completed', 'cancelled' ].sample,
+    status: ['pending', 'paid', 'shipped', 'completed', 'cancelled'].sample,
     created_at: Faker::Time.between(from: 1.year.ago, to: Date.today),
     updated_at: Faker::Time.between(from: 1.year.ago, to: Date.today)
   )
 
+  subtotal = 0.0
   rand(1..5).times do
-    OrderItem.create!(
+    order_item = OrderItem.create!(
       order: order,
       product: Product.order('RANDOM()').first,
       quantity: rand(1..10),
@@ -151,8 +166,14 @@ end
       created_at: Faker::Time.between(from: 1.year.ago, to: Date.today),
       updated_at: Faker::Time.between(from: 1.year.ago, to: Date.today)
     )
+    subtotal += order_item.price_at_purchase * order_item.quantity
   end
+
+  # Set subtotal and calculate total amount
+  order.update!(subtotal: subtotal)
+  order.calculate_totals  # Ensure this method is defined in the Order model to compute total_amount
 end
+
 
 # Seed OrderTaxRates table
 10.times do

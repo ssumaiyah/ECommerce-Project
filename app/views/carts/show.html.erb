@@ -24,15 +24,14 @@
           <td><%= number_to_currency(item.product.price) %></td>
           <td><%= number_to_currency(item.total_price) %></td>
           <td>
-           <%= button_to 'Remove', remove_item_cart_path(id: item.id), method: :delete, data: { confirm: 'Are you sure?' } %>
-
-
+            <%= button_to 'Remove', remove_item_cart_path(id: item.id), method: :delete, data: { confirm: 'Are you sure?' } %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
   <h2>Total: <%= number_to_currency(@order_items.sum(&:total_price)) %></h2>
+  <%= link_to 'Checkout', checkout_cart_path %>
 <% else %>
   <p>Your cart is empty.</p>
 <% end %>

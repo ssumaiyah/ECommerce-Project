@@ -35,6 +35,7 @@ ActiveAdmin.register User do
       row :encrypted_password
       row :created_at
       row :updated_at
+      row :address
       row :province
     end
     active_admin_comments

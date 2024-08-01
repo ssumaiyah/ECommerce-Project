@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_29_134011) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_31_195752) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -108,6 +108,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_29_134011) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "subtotal", precision: 10, scale: 2, default: "0.0", null: false
+    t.string "address"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -180,7 +181,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_29_134011) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "province_id"
-    t.string "encrypted_password"
+    t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at", precision: nil
     t.datetime "remember_created_at", precision: nil
@@ -189,6 +190,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_29_134011) do
     t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
+    t.string "password_digest"
     t.string "name"
     t.string "address"
     t.string "city"
