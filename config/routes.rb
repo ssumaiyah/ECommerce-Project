@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   end
   
 
-  resources :orders, only: [:show] do
+  resources :orders, only: [:show, :index] do
     member do
       patch 'update_item/:id', to: 'orders#update_item', as: 'update_item'
       delete 'remove_item/:id', to: 'orders#remove_item', as: 'remove_item'

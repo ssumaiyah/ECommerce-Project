@@ -21,6 +21,7 @@
           <li class="nav-item">
             <%= link_to "Contact", contact_path, class: "nav-link" %>
           </li>
+          
           <li class="nav-item">
           <%= link_to 'View Cart', cart_path, class: "nav-link" %>
           </li>
@@ -29,11 +30,15 @@
       <li><%= button_to 'Log out', destroy_user_session_path, method: :delete, data: { turbo: false } %>
 
 </li>
+<li class="nav-item">
+          <%= link_to 'Past Orders', orders_path if user_signed_in? %>
+          </li>
     <% else %>
       <li><%= link_to 'Sign up', new_user_registration_path %></li>
       <li><%= link_to 'Login', new_user_session_path %></li>
     <% end %>
         </ul>
+        
         
         <%= render 'layouts/searchform' %>
       </div>
