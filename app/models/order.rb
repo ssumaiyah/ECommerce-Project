@@ -1,15 +1,14 @@
 class Order < ApplicationRecord
   belongs_to :user
   has_many :order_items, dependent: :destroy
-  belongs_to :province, optional: true
   has_many :order_tax_rates
   has_many :tax_rates, through: :order_tax_rates
+  belongs_to :province, optional: true
 
   before_save :calculate_totals
   # Validations can be uncommented if needed
-  # validates :user, presence: true
-  # validates :status, presence: true, inclusion: { in: %w[in_progress completed cancelled], message: "%{value} is not a valid status" }
-  # validates :subtotal, numericality: { greater_than_or_equal_to: 0 }, presence: true
+  validates :user, presence: true
+  validates :subtotal, numericality: { greater_than_or_equal_to: 0 }, presence: true
   # validates :total_amount, numericality: { greater_than_or_equal_to: 0 }, presence: true
   # validates :order_date, presence: true
   # validates :address, presence: true

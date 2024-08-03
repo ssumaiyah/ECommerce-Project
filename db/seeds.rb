@@ -28,7 +28,7 @@ provinces_with_tax_rates = [
   { name: "Nunavut", gst: 5, pst: 0, hst: 0, qst: 0 },
   { name: "Ontario", gst: 0, pst: 0, hst: 13, qst: 0 },
   { name: "Prince Edward Island", gst: 0, pst: 0, hst: 15, qst: 0 },
-  { name: "Quebec", gst: 5, pst: 9.975, hst: 0, qst: 9.975 },
+  { name: "Quebec", gst: 5, pst: 0, hst: 0, qst: 9.975 },
   { name: "Saskatchewan", gst: 5, pst: 6, hst: 0, qst: 0 },
   { name: "Yukon", gst: 5, pst: 0, hst: 0, qst: 0 }
 ]
