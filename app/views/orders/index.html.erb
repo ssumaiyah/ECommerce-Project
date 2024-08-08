@@ -1,24 +1,23 @@
+<!-- app/views/orders/index.html.erb -->
 <h1>Your Past Orders</h1>
 
 <% @orders.each do |order| %>
   <div class="order">
-    <h2>Order #<%= order.id %></h2>
-    <p>Order Date: <%= order.created_at.strftime("%B %d, %Y") %></p>
-
-    <h3>Products Ordered:</h3>
+    <h2>Order ID: <%= order.id %></h2>
+    <p>Order Date: <%= order.order_date %></p>
+    <p>Total Amount: <%= order.total_amount %></p>
+    <p>Taxes: 
+      GST: <%= order.tax_rates.find_by(tax_type: "GST")&.rate.to_f %>, 
+      PST: <%= order.tax_rates.find_by(tax_type: "PST")&.rate.to_f %>, 
+      HST: <%= order.tax_rates.find_by(tax_type: "HST")&.rate.to_f %>, 
+      QST: <%= order.tax_rates.find_by(tax_type: "QST")&.rate.to_f %>
+    </p>
     <ul>
       <% order.order_items.each do |item| %>
-        <li><%= item.product.name %> - Quantity: <%= item.quantity %></li>
+        <li>
+          <%= item.product.name %> - Quantity: <%= item.quantity %> - Price: <%= item.price_at_purchase %>
+        </li>
       <% end %>
     </ul>
-
-    <h3>Taxes:</h3>
-    <ul>
-      <% order.order_tax_rates.each do |tax_rate| %>
-        <li><%= tax_rate.tax_rate.name %>: <%= tax_rate.amount %></li>
-      <% end %>
-    </ul>
-
-    <h3>Grand Total: <%= order.total_amount %></h3>
   </div>
 <% end %>
