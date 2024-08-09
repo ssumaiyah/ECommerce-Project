@@ -22,7 +22,11 @@
   <div class="field">
     <%= f.label :image %>
     <%= f.file_field :image %>
-    <%= image_tag @product.image if @product.image.attached? %>
+    <% if @product.image.attached? %>
+      <%= image_tag @product.thumbnail, alt: 'Thumbnail' %>
+      <%= image_tag @product.medium_image, alt: 'Medium Image' %>
+      <%= image_tag @product.large_image, alt: 'Large Image' %>
+    <% end %>
   </div>
 
   <div class="actions">

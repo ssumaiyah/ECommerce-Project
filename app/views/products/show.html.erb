@@ -19,11 +19,27 @@
   <% end %>
 </ul>
 
+
 <% if @product.image.attached? %>
-  <%= image_tag @product.image %>
+  <!-- Thumbnail size (100x100) -->
+  <div class="thumbnail">
+    <%= image_tag @product.image.variant(resize_to_fill: [100, 100]), alt: "#{@product.name} Thumbnail" %>
+  </div>
+
+  <!-- Medium size (300x300) -->
+  <div class="medium">
+    <%= image_tag @product.image.variant(resize_to_limit: [300, 300]), alt: "#{@product.name} Medium" %>
+  </div>
+
+  <!-- Large size (800x800) -->
+  <div class="large">
+    <%= image_tag @product.image.variant(resize_to_limit: [800, 800]), alt: "#{@product.name} Large" %>
+  </div>
 <% else %>
-  <p>No image added</p>
+  <p>No image available</p>
 <% end %>
+
+
 
 <%= form_with url: add_item_cart_product_path(@product), method: :post do |form| %>
   <div class="field">
