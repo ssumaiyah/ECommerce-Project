@@ -6,7 +6,7 @@ class Order < ApplicationRecord
   belongs_to :province, optional: true
 
   before_save :calculate_totals
-  # Validations can be uncommented if needed
+
   validates :user, presence: true
   validates :subtotal, numericality: { greater_than_or_equal_to: 0 }, presence: true
   # validates :total_amount, numericality: { greater_than_or_equal_to: 0 }, presence: true
@@ -16,20 +16,24 @@ class Order < ApplicationRecord
   scope :in_progress, -> { where(status: "in_progress") }
 
   def calculate_totals
-    gst_rate = tax_rates.find_by(tax_type: "GST")&.rate.to_f || 0
-    pst_rate = tax_rates.find_by(tax_type: "PST")&.rate.to_f || 0
-    hst_rate = tax_rates.find_by(tax_type: "HST")&.rate.to_f || 0
-    qst_rate = tax_rates.find_by(tax_type: "QST")&.rate.to_f || 0
+    self.subtotal = order_items.sum { |item| item.price_at_purchase * item.quantity }
+    taxes = calculate_taxes
+    self.total_amount = subtotal + taxes.values.sum
+  end
 
-    subtotal = order_items.sum { |item| item.price_at_purchase * item.quantity }
-    gst_amount = (gst_rate * subtotal / 100).to_f
-    pst_amount = (pst_rate * subtotal / 100).to_f
-    hst_amount = (hst_rate * subtotal / 100).to_f
-    qst_amount = (qst_rate * subtotal / 100).to_f
-    total_amount = subtotal + gst_amount + pst_amount + hst_amount + qst_amount
+  def calculate_taxes
+    taxes = {
+      pst: tax_rate_value("PST"),
+      gst: tax_rate_value("GST"),
+      hst: tax_rate_value("HST"),
+      qst: tax_rate_value("QST")
+    }
+    taxes.each { |key, value| taxes[key] = (value * subtotal / 100).to_f }
+    taxes
+  end
 
-    self.subtotal = subtotal
-    self.total_amount = total_amount
+  def tax_rate_value(tax_type)
+    tax_rates.find_by(tax_type: tax_type)&.rate.to_f || 0
   end
 
   def add_product(product_id, quantity)

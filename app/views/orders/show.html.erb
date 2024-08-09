@@ -1,7 +1,7 @@
 <h1>Order Details</h1>
 
 <ul>
-  <% if @order_items.any? %>
+  <% if @order_items.present? %>
     <% @order_items.each do |order_item| %>
       <li>
         <%= order_item.quantity %> x 
@@ -18,7 +18,12 @@
   <% end %>
 </ul>
 
-<p><strong>Total Amount:</strong> <%= number_to_currency(@order.total_amount) %></p>
+<p><strong>Subtotal:</strong> <%= number_to_currency(@subtotal) %></p>
+<p><strong>PST:</strong> <%= number_to_currency(@taxes[:pst] || 0) %></p>
+<p><strong>GST:</strong> <%= number_to_currency(@taxes[:gst] || 0) %></p>
+<p><strong>HST:</strong> <%= number_to_currency(@taxes[:hst] || 0) %></p>
+<p><strong>QST:</strong> <%= number_to_currency(@taxes[:qst] || 0) %></p>
+<p><strong>Total Amount:</strong> <%= number_to_currency(@total_amount) %></p>
 <p><strong>Status:</strong> <%= @order.status.humanize %></p>
 
 <% if @order.status == 'pending' %>

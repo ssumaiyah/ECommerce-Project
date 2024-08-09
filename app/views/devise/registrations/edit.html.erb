@@ -4,12 +4,12 @@
 
   <div class="field">
     <%= form.label :email %><br />
-    <%= form.email_field :email, autofocus: true, autocomplete: "email" %>
+    <%= form.email_field :email, autofocus: true %>
   </div>
 
   <div class="field">
     <%= form.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= form.password_field :password, autocomplete: "new-password" %>
+    <%= form.password_field :password%>
     <% if @minimum_password_length %>
       <em><%= @minimum_password_length %> characters minimum</em>
     <% end %>
@@ -17,12 +17,12 @@
 
   <div class="field">
     <%= form.label :password_confirmation %><br />
-    <%= form.password_field :password_confirmation, autocomplete: "new-password" %>
+    <%= form.password_field :password_confirmation %>
   </div>
 
   <div class="field">
     <%= form.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= form.password_field :current_password, autocomplete: "current-password" %>
+    <%= form.password_field :current_password %>
   </div>
 
   <div class="field">

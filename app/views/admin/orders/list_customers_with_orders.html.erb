@@ -1,0 +1,44 @@
+<h1>Customers with Orders</h1>
+
+<% @customers.joins(:orders).order('orders.created_at DESC').each do |customer| %>
+  <div class="customer">
+    <h2><strong><b><%= customer.name %></b><strong></h2>
+
+    <% orders = customer.orders.order('created_at DESC') %>
+    <% orders.each do |order| %>
+      <div class="order"><br>
+        <h3>Order ID: <%= order.id %></h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% order.order_items.each do |order_item| %>
+              <tr>
+                <td><%= order_item.product.name %></td>
+                <td><%= order_item.quantity %></td>
+                <td><%= number_to_currency(order_item.price_at_purchase) %></td>
+                <td><%= number_to_currency(order_item.total_price) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <div class="order-summary">
+          <% taxes = order.calculate_taxes %>
+          <p><strong>Subtotal:</strong> <%= number_to_currency(order.subtotal) %></p>
+          <p><strong>PST:</strong> <%= number_to_currency(taxes[:pst]) %></p>
+          <p><strong>GST:</strong> <%= number_to_currency(taxes[:gst]) %></p>
+          <p><strong>HST:</strong> <%= number_to_currency(taxes[:hst]) %></p>
+          <p><strong>QST:</strong> <%= number_to_currency(taxes[:qst]) %></p>
+          <p><strong>Grand Total:</strong> <%= number_to_currency(order.total_amount) %></p>
+        </div>
+      </div><br><br>
+    <% end %>
+  </div>
+<% end %>

@@ -13,6 +13,10 @@
   <p class="alert"><%= alert %></p> 
   
  <%= render 'layouts/navbar' %>
+ <div class="container">
+    <nav aria-label="breadcrumb">
+      <%= breadcrumbs %>
+    </nav>
   <%= yield %>
 </body>
 </html>

@@ -1,23 +1,47 @@
 <!-- app/views/orders/index.html.erb -->
-<h1>Your Past Orders</h1>
+<h1>My Past Orders</h1>
 
-<% @orders.each do |order| %>
-  <div class="order">
-    <h2>Order ID: <%= order.id %></h2>
-    <p>Order Date: <%= order.order_date %></p>
-    <p>Total Amount: <%= order.total_amount %></p>
-    <p>Taxes: 
-      GST: <%= order.tax_rates.find_by(tax_type: "GST")&.rate.to_f %>, 
-      PST: <%= order.tax_rates.find_by(tax_type: "PST")&.rate.to_f %>, 
-      HST: <%= order.tax_rates.find_by(tax_type: "HST")&.rate.to_f %>, 
-      QST: <%= order.tax_rates.find_by(tax_type: "QST")&.rate.to_f %>
-    </p>
-    <ul>
-      <% order.order_items.each do |item| %>
-        <li>
-          <%= item.product.name %> - Quantity: <%= item.quantity %> - Price: <%= item.price_at_purchase %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
+<% if @orders.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>Order Date</th>
+        <th>Order Status</th>
+        <th>Subtotal</th>
+        <th>PST</th>
+        <th>GST</th>
+        <th>HST</th>
+        <th>QST</th>
+        <th>Total Amount</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+     <% @orders_with_taxes.each do |order_with_taxes| %>
+  <tr>
+    <td><%= order_with_taxes[:order].id %></td>
+    <td><%= order_with_taxes[:order].order_date.present? ? order_with_taxes[:order].order_date.strftime("%B %d, %Y") : 'Date Not Available' %></td>
+    <td><%= order_with_taxes[:order].status %></td>
+    <td><%= number_to_currency(order_with_taxes[:order].subtotal) %></td>
+    <td><%= number_to_currency(order_with_taxes[:taxes][:pst] || 0) %></td>
+    <td><%= number_to_currency(order_with_taxes[:taxes][:gst] || 0) %></td>
+    <td><%= number_to_currency(order_with_taxes[:taxes][:hst] || 0) %></td>
+    <td><%= number_to_currency(order_with_taxes[:taxes][:qst] || 0) %></td>
+    <td>
+      <%= number_to_currency(
+        order_with_taxes[:order].subtotal +
+        (order_with_taxes[:taxes][:pst] || 0) +
+        (order_with_taxes[:taxes][:gst] || 0) +
+        (order_with_taxes[:taxes][:hst] || 0) +
+        (order_with_taxes[:taxes][:qst] || 0)
+      ) %>
+    </td>
+    <td><%= link_to 'View Details', order_path(order_with_taxes[:order]) %></td>
+  </tr>
+<% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You have no past orders.</p>
 <% end %>
