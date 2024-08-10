@@ -1,56 +1,72 @@
-<h1><%= @product.name %></h1>
+<div class="container mx-auto py-8 px-4">
+  <h1 class="text-3xl font-bold text-gray-900 mb-6"><%= @product.name %></h1>
 
-<p><strong>Description:</strong></p>
-<p><%= @product.description %></p>
+  <div class="mb-4">
+    <p class="text-lg font-semibold text-gray-800">Description:</p>
+    <p class="text-gray-700"><%= @product.description %></p>
+  </div>
 
-<p><strong>Price:</strong></p>
-<p><%= number_to_currency(@product.price) %></p>
+  <div class="mb-4">
+    <p class="text-lg font-semibold text-gray-800">Price:</p>
+    <p class="text-gray-700"><%= number_to_currency(@product.price) %></p>
+  </div>
 
-<p><strong>Quantity available:</strong></p>
-<p><%= @product.quantity_available %></p>
+  <div class="mb-4">
+    <p class="text-lg font-semibold text-gray-800">Quantity available:</p>
+    <p class="text-gray-700"><%= @product.quantity_available %></p>
+  </div>
 
-<p><strong>Artisan:</strong></p>
-<p><%= @product.artisan.name %></p>
+  <div class="mb-4">
+    <p class="text-lg font-semibold text-gray-800">Artisan:</p>
+    <p class="text-gray-700"><%= @product.artisan.name %></p>
+  </div>
 
-<p><strong>Categories:</strong></p>
-<ul>
-  <% @product.categories.each do |category| %>
-    <li><%= link_to category.name, category_path(category) %></li>
+  <div class="mb-4">
+    <p class="text-lg font-semibold text-gray-800">Categories:</p>
+    <ul class="list-disc list-inside text-gray-700">
+      <% @product.categories.each do |category| %>
+        <li><%= link_to category.name, category_path(category), class: "text-blue-500 hover:underline" %></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <% if @product.image.attached? %>
+    <div class="mb-6">
+      <div class="mb-4">
+        <!-- Thumbnail size (100x100) -->
+        <div class="thumbnail mb-2">
+          <%= image_tag @product.image.variant(resize_to_fill: [100, 100]), alt: "#{@product.name} Thumbnail", class: "rounded border border-gray-300" %>
+        </div>
+
+        <!-- Medium size (300x300) -->
+        <div class="medium mb-2">
+          <%= image_tag @product.image.variant(resize_to_limit: [300, 300]), alt: "#{@product.name} Medium", class: "rounded border border-gray-300" %>
+        </div>
+
+        <!-- Large size (800x800) -->
+        <div class="large">
+          <%= image_tag @product.image.variant(resize_to_limit: [800, 800]), alt: "#{@product.name} Large", class: "rounded border border-gray-300" %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <p class="text-red-500">No image available</p>
   <% end %>
-</ul>
 
-
-<% if @product.image.attached? %>
-  <!-- Thumbnail size (100x100) -->
-  <div class="thumbnail">
-    <%= image_tag @product.image.variant(resize_to_fill: [100, 100]), alt: "#{@product.name} Thumbnail" %>
+  <div class="mb-6">
+    <%= form_with url: add_item_cart_product_path(@product), method: :post, local: true do |form| %>
+      <div class="mb-4">
+        <%= form.label :quantity, class: "block text-lg font-medium text-gray-800" %>
+        <%= form.number_field :quantity, value: 1, min: 1, class: "mt-1 block w-20 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+      </div>
+      <%= form.hidden_field :product_id, value: @product.id %>
+      <%= form.submit 'Add to Cart', class: "inline-flex items-center px-4 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+    <% end %>
   </div>
 
-  <!-- Medium size (300x300) -->
-  <div class="medium">
-    <%= image_tag @product.image.variant(resize_to_limit: [300, 300]), alt: "#{@product.name} Medium" %>
+  <div class="flex space-x-4">
+    <%= link_to 'View Cart', cart_path, class: "inline-flex items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+    <%= link_to 'Edit', edit_product_path(@product), class: "inline-flex items-center px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" %>
+    <%= link_to 'Back', products_path, class: "inline-flex items-center px-4 py-2 bg-gray-500 text-white font-semibold rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" %>
   </div>
-
-  <!-- Large size (800x800) -->
-  <div class="large">
-    <%= image_tag @product.image.variant(resize_to_limit: [800, 800]), alt: "#{@product.name} Large" %>
-  </div>
-<% else %>
-  <p>No image available</p>
-<% end %>
-
-
-
-<%= form_with url: add_item_cart_product_path(@product), method: :post do |form| %>
-  <div class="field">
-    <%= form.label :quantity %>
-    <%= form.number_field :quantity, value: 1, min: 1 %>
-  </div>
-  <%= form.hidden_field :product_id, value: @product.id %>
-  <%= form.submit 'Add to Cart' %>
-<% end %>
-
-
-<%= link_to 'View Cart', cart_path, class: 'btn btn-primary' %>
-<%= link_to 'Edit', edit_product_path(@product), class: 'btn btn-secondary' %>
-<%= link_to 'Back', products_path, class: 'btn btn-secondary' %>
+</div>

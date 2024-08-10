@@ -1,46 +1,56 @@
-<nav>
-    <div class="container">
-      <%= link_to "Home", root_path, class: "navbar-brand" %>
-      <button type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+<nav class="bg-white shadow-md border-b border-gray-200">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <%= link_to "Home", root_path, class: "text-2xl font-bold text-gray-800 hover:text-blue-600" %>
+
+    <!-- Mobile menu button -->
+    <button type="button" class="md:hidden text-gray-800 focus:outline-none" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+
+    <!-- Navigation links -->
+    <div class="hidden md:flex items-center space-x-6" id="navbarNav">
+      <ul class="flex space-x-4">
+        <li class="nav-item">
+          <%= link_to "Products", products_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Categories", categories_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Artisans", artisans_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "About", about_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Contact", contact_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'View Cart', cart_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
+        </li>
+        <% if user_signed_in? %>
           <li class="nav-item">
-            <%= link_to "Products", products_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Categories", categories_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Artisans", artisans_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "About", about_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Contact", contact_path, class: "nav-link" %>
+            <%= link_to 'Edit profile', edit_user_registration_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
           </li>
           
           <li class="nav-item">
-          <%= link_to 'View Cart', cart_path, class: "nav-link" %>
+            <%= link_to 'My Orders', orders_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
           </li>
-            <% if user_signed_in? %>
-      <li><%= link_to 'Edit profile', edit_user_registration_path %></li>
-      <li><%= button_to 'Log out', destroy_user_session_path, method: :delete, data: { turbo: false } %>
-
-</li>
-<% if user_signed_in? %>
-  <li><%= link_to 'My Orders', orders_path %></li>
-<% end %>
-    <% else %>
-      <li><%= link_to 'Sign up', new_user_registration_path %></li>
-      <li><%= link_to 'Login', new_user_session_path %></li>
-    <% end %>
-        </ul>
-        
-        
-        <%= render 'layouts/searchform' %>
-      </div>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to 'Sign up', new_user_registration_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to 'Login', new_user_session_path, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
+          </li>
+        <% end %>
+      </ul>
+      <%= render 'layouts/searchform' %>
+      <li class="nav-item">
+            <%= button_to 'Log out', destroy_user_session_path, method: :delete, data: { turbo: false }, class: "text-lg font-medium text-gray-700 hover:text-blue-600" %>
+         
     </div>
-  </nav>
+  </div>
+</nav>

@@ -1,9 +1,15 @@
 <%= form_with(url: search_products_path, method: :get, local: true) do |form| %>
-            <div class="form-inline">
-              <%= form.label :search, "Search Products", class: "sr-only" %>
-              <%= form.text_field :search, class: "form-control mr-sm-2", placeholder: "Search", value: params[:search] %>
-              <%= form.label :category_id, "Category", class: "sr-only" %>
-              <%= form.collection_select :category_id, Category.all, :id, :name, { include_blank: "All Categories" }, { class: "form-control mr-sm-2" } %>
-              <%= form.submit "Search", class: "btn btn-outline-success my-2 my-sm-0" %>
-            </div>
-          <% end %>
+  <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+    <div class="flex flex-col">
+      <%= form.label :search, "Search Products", class: "sr-only" %>
+      <%= form.text_field :search, class: "form-input px-4 py-2 border border-gray-300 rounded-lg text-lg", placeholder: "Search", value: params[:search] %>
+    </div>
+    <div class="flex flex-col">
+      <%= form.label :category_id, "Category", class: "sr-only" %>
+      <%= form.collection_select :category_id, Category.all, :id, :name, { include_blank: "All Categories" }, { class: "form-select px-4 py-2 border border-gray-300 rounded-lg text-lg" } %>
+    </div>
+    <div class="flex flex-col">
+      <%= form.submit "Search", class: "btn px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 text-lg" %>
+    </div>
+  </div>
+<% end %>

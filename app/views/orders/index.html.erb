@@ -1,59 +1,62 @@
-<!-- app/views/orders/index.html.erb -->
-<h1>My Past Orders</h1>
+<div class="container mx-auto py-8 px-4">
+  <h1 class="text-3xl font-bold text-blue-900 mb-6">My Past Orders</h1>
 
-<% if @orders_with_taxes.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Order #</th>
-        <th>Products</th>
-        <th>Order Status</th>
-        <th>Subtotal</th>
-        <th>PST</th>
-        <th>GST</th>
-        <th>HST</th>
-        <th>QST</th>
-        <th>Total Amount</th>
-        <th>Details</th>
-      </tr>
-    </thead>
-    <tbody>
-     <% @orders_with_taxes.each do |order_with_taxes| %>
-      <tr>
-        <td><%= order_with_taxes[:order].id %></td>
-        
-        <td><%= order_with_taxes[:order].status %></td>
-        <td>
-          <ul>
-            <% order_with_taxes[:order].order_items.each do |item| %>
-              <li>
-                <strong>Product:</strong> <%= item.product.name %> <br>
-                <strong>Quantity:</strong> <%= item.quantity %> <br>
-                <strong>Price:</strong> <%= number_to_currency(item.price_at_purchase) %>
-              </li>
-            <% end %>
-          </ul>
-        </td>
-        <td><%= number_to_currency(order_with_taxes[:order].subtotal) %></td>
-        <td><%= number_to_currency(order_with_taxes[:taxes][:pst] || 0) %></td>
-        <td><%= number_to_currency(order_with_taxes[:taxes][:gst] || 0) %></td>
-        <td><%= number_to_currency(order_with_taxes[:taxes][:hst] || 0) %></td>
-        <td><%= number_to_currency(order_with_taxes[:taxes][:qst] || 0) %></td>
-        <td>
-          <%= number_to_currency(
-            order_with_taxes[:order].subtotal +
-            (order_with_taxes[:taxes][:pst] || 0) +
-            (order_with_taxes[:taxes][:gst] || 0) +
-            (order_with_taxes[:taxes][:hst] || 0) +
-            (order_with_taxes[:taxes][:qst] || 0)
-          ) %>
-        </td>
-        
-        <td><%= link_to 'View Details', order_path(order_with_taxes[:order]) %></td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>You have no past orders.</p>
-<% end %>
+  <% if @orders_with_taxes.any? %>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white shadow-md rounded-lg">
+        <thead class="bg-green-600 text-white">
+          <tr>
+            <th class="px-4 py-2 text-left">Order #</th>
+            <th class="px-4 py-2 text-left">Order Status</th>
+            <th class="px-4 py-2 text-left">Products</th>
+            <th class="px-4 py-2 text-left">Subtotal</th>
+            <th class="px-4 py-2 text-left">PST</th>
+            <th class="px-4 py-2 text-left">GST</th>
+            <th class="px-4 py-2 text-left">HST</th>
+            <th class="px-4 py-2 text-left">QST</th>
+            <th class="px-4 py-2 text-left">Total Amount</th>
+            <th class="px-4 py-2 text-left">Details</th>
+          </tr>
+        </thead>
+        <tbody class="bg-blue-50 text-blue-900">
+          <% @orders_with_taxes.each do |order_with_taxes| %>
+            <tr class="border-b border-blue-200">
+              <td class="px-4 py-2"><%= order_with_taxes[:order].id %></td>
+              <td class="px-4 py-2"><%= order_with_taxes[:order].status %></td>
+              <td class="px-4 py-2">
+                <ul class="list-disc pl-5">
+                  <% order_with_taxes[:order].order_items.each do |item| %>
+                    <li class="mb-2">
+                      <strong>Product:</strong> <%= item.product.name %><br>
+                      <strong>Quantity:</strong> <%= item.quantity %><br>
+                      <strong>Price:</strong> <%= number_to_currency(item.price_at_purchase) %>
+                    </li>
+                  <% end %>
+                </ul>
+              </td>
+              <td class="px-4 py-2"><%= number_to_currency(order_with_taxes[:order].subtotal) %></td>
+              <td class="px-4 py-2"><%= number_to_currency(order_with_taxes[:taxes][:pst] || 0) %></td>
+              <td class="px-4 py-2"><%= number_to_currency(order_with_taxes[:taxes][:gst] || 0) %></td>
+              <td class="px-4 py-2"><%= number_to_currency(order_with_taxes[:taxes][:hst] || 0) %></td>
+              <td class="px-4 py-2"><%= number_to_currency(order_with_taxes[:taxes][:qst] || 0) %></td>
+              <td class="px-4 py-2">
+                <%= number_to_currency(
+                  order_with_taxes[:order].subtotal +
+                  (order_with_taxes[:taxes][:pst] || 0) +
+                  (order_with_taxes[:taxes][:gst] || 0) +
+                  (order_with_taxes[:taxes][:hst] || 0) +
+                  (order_with_taxes[:taxes][:qst] || 0)
+                ) %>
+              </td>
+              <td class="px-4 py-2">
+                <%= link_to 'View Details', order_path(order_with_taxes[:order]), class: "text-green-600 hover:text-green-800 underline" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-red-500 mt-4">You have no past orders.</p>
+  <% end %>
+</div>

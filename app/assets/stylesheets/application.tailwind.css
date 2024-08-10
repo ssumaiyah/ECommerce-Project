@@ -1,13 +1,114 @@
+/* Import Tailwind's base styles */
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-/*
+/* Custom Base Styles */
+@layer base {
+  /* Set a larger base font size for readability */
+  html {
+    font-size: 18px;
+    font-family: 'Inter', sans-serif; /* Use a clean, professional font */
+  }
 
-@layer components {
+  /* Typography Enhancements */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif; /* Apply a different font for headings */
+    font-weight: 700;
+  }
+
+  h1 {
+    @apply text-4xl text-gray-900;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    @apply text-3xl text-gray-800;
+    margin-bottom: 0.75rem;
+  }
+
+  h3 {
+    @apply text-2xl text-gray-700;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    @apply text-lg text-gray-600;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  a {
+    @apply text-blue-600 hover:text-blue-800 underline;
+    transition: color 0.3s ease;
+  }
+
+  /* Button Styles */
   .btn-primary {
-    @apply py-2 px-4 bg-blue-200;
+    @apply bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow hover:bg-blue-700 transition;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-600 text-white font-semibold py-2 px-4 rounded-md shadow hover:bg-gray-700 transition;
+  }
+
+  /* Form Inputs */
+  input, select, textarea {
+    @apply border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 focus:border-blue-500;
+    padding: 0.5rem;
+    font-size: 1rem;
   }
 }
 
-*/
+/* Import Tailwind's component styles */
+@tailwind components;
+
+/* Custom Component Styles */
+@layer components {
+  /* Card Component */
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 mb-4;
+  }
+
+  .card-header {
+    @apply text-xl font-bold text-gray-900 mb-2;
+  }
+
+  .card-body {
+    @apply text-gray-700 text-base;
+  }
+
+  .card-footer {
+    @apply border-t border-gray-200 mt-4 pt-4;
+  }
+
+  /* Navbar Styling */
+  .navbar {
+    @apply bg-gray-800 text-white py-4 px-6;
+  }
+
+  .navbar a {
+    @apply text-white hover:text-blue-300;
+  }
+
+  /* Footer Styling */
+  .footer {
+    @apply bg-gray-900 text-gray-400 py-8 mt-8;
+  }
+
+  .footer a {
+    @apply text-gray-300 hover:text-white;
+  }
+}
+
+/* Import Tailwind's utility styles */
+@tailwind utilities;
+
+/* Custom Utilities */
+@layer utilities {
+  .section-padding {
+    @apply py-8 px-4 md:px-8 lg:px-12;
+  }
+
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}

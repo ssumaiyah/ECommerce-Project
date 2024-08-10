@@ -1,25 +1,26 @@
-<h1>Products</h1>
+<div class="container mx-auto py-8 px-4">
+  <h1 class="text-3xl font-bold text-blue-800 mb-6">Products</h1>
 
-<div class="filters">
-  <%= link_to 'All Products', products_path %>
-  <%= link_to 'New Products', products_path(filter: 'new') %>
-  <%= link_to 'Recently Updated Products', products_path(filter: 'recently_updated') %>
-</div>
+  <div class="filters flex space-x-4 mb-6">
+    <%= link_to 'All Products', products_path, class: "text-lg font-medium text-blue-600 hover:text-blue-800" %>
+    <%= link_to 'New Products', products_path(filter: 'new'), class: "text-lg font-medium text-blue-600 hover:text-blue-800" %>
+    <%= link_to 'Recently Updated Products', products_path(filter: 'recently_updated'), class: "text-lg font-medium text-blue-600 hover:text-blue-800" %>
+  </div>
 
+  <div class="pagination mb-6">
+    <%= paginate @products, class: "text-center" if @products.present? %>
+  </div>
 
-<div class="pagination">
-  <%= paginate @products if @products.present? %>
-</div>
-
-<ul>
-  <% if @products.present? %>
-    <% @products.each do |product| %>
-      <li>
-        <%= link_to product.name, product_path(product) %>
-        <!-- Add more product details here as needed -->
-      </li>
+  <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% if @products.present? %>
+      <% @products.each do |product| %>
+        <li class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
+          <%= link_to product.name, product_path(product), class: "text-xl font-semibold text-gray-800 hover:text-blue-600" %>
+          <!-- Add more product details here as needed -->
+        </li>
+      <% end %>
+    <% else %>
+      <p class="text-red-500">No products found.</p>
     <% end %>
-  <% else %>
-    <p>No products found.</p>
-  <% end %>
-</ul>
+  </ul>
+</div>
